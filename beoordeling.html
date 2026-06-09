@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Schiet & Leer Compact</title>
+  <style>
+    :root{
+      --purple:#5b2cff;
+      --blue:#1ed8ff;
+      --pink:#ff2fd6;
+      --yellow:#ffe84a;
+      --green:#4dff88;
+      --dark:#101331;
+      --panel:rgba(13, 18, 55, .84);
+      --white:#fff;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: Impact, Haettenschweiler, "Arial Black", system-ui, sans-serif;
+      color:var(--white);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(255,47,214,.65), transparent 30%),
+        radial-gradient(circle at 80% 15%, rgba(30,216,255,.70), transparent 28%),
+        linear-gradient(135deg,#27135f 0%, #0f2b74 45%, #111331 100%);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+    }
+
+    .page{
+      width:min(1000px, 96vw);
+      height:500px;
+      padding:10px;
+      display:grid;
+      grid-template-rows:62px 1fr;
+      gap:8px;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      min-height:0;
+    }
+
+    h1{
+      margin:0;
+      line-height:.9;
+      font-size:2.35rem;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      text-shadow: 3px 3px 0 #000, 0 0 14px rgba(255,232,74,.9);
+      transform:skew(-6deg);
+      white-space:nowrap;
+    }
+
+    .tag{
+      border:3px solid #000;
+      background:var(--yellow);
+      color:#111;
+      padding:8px 12px;
+      box-shadow:4px 4px 0 #000;
+      transform:rotate(2deg);
+      text-transform:uppercase;
+      font-size:.95rem;
+      white-space:nowrap;
+    }
+
+    .arena-wrap{
+      display:grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap:12px;
+      align-items:stretch;
+      min-height:0;
+    }
+
+    .arena{
+      position:relative;
+      height:410px;
+      min-height:0;
+      border:5px solid #000;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow: 8px 8px 0 #000, 0 0 28px rgba(30,216,255,.45);
+      background:
+        linear-gradient(rgba(255,255,255,.06) 2px, transparent 2px),
+        linear-gradient(90deg, rgba(255,255,255,.06) 2px, transparent 2px),
+        radial-gradient(circle at 50% 20%, rgba(255,232,74,.32), transparent 19%),
+        linear-gradient(160deg, #2fc0ff 0 23%, #44c96b 23% 55%, #2c8a56 55% 100%);
+      background-size: 42px 42px, 42px 42px, auto, auto;
+      cursor:crosshair;
+      isolation:isolate;
+    }
+
+    .arena::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(135deg, transparent 0 64%, rgba(255,255,255,.17) 64% 65%, transparent 65%),
+        radial-gradient(circle at 15% 74%, rgba(20,20,20,.24), transparent 11%),
+        radial-gradient(circle at 78% 80%, rgba(20,20,20,.22), transparent 13%);
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .hill{
+      position:absolute;
+      z-index:1;
+      left:-8%;
+      right:-8%;
+      bottom:-18%;
+      height:38%;
+      background:linear-gradient(#38d36d,#16743d);
+      border-top:5px solid rgba(0,0,0,.45);
+      border-radius:50% 50% 0 0;
+    }
+
+    .item{
+      position:absolute;
+      z-index:3;
+      width:88px;
+      height:88px;
+      border:4px solid #000;
+      border-radius:18px;
+      background:linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,255,255,.55));
+      box-shadow:6px 6px 0 #000, 0 0 14px rgba(255,255,255,.75);
+      display:grid;
+      place-items:center;
+      font-size:2.55rem;
+      user-select:none;
+      transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+      animation:float 2.4s ease-in-out infinite;
+      cursor:pointer;
+    }
+
+    .item:hover{
+      transform:scale(1.06) rotate(-3deg);
+      filter:saturate(1.25);
+      box-shadow:7px 7px 0 #000, 0 0 20px var(--yellow);
+    }
+
+    .item.hit{
+      animation:pop .34s ease;
+      background:linear-gradient(145deg, #ffe84a, #ff7adc);
+    }
+
+    .item::after{
+      content:attr(data-label);
+      position:absolute;
+      left:50%;
+      bottom:-28px;
+      transform:translateX(-50%);
+      background:#111;
+      color:#fff;
+      border:2px solid #000;
+      border-radius:999px;
+      padding:3px 8px;
+      font-family:Arial, sans-serif;
+      font-weight:900;
+      font-size:.68rem;
+      letter-spacing:.2px;
+      white-space:nowrap;
+    }
+
+    .item:nth-of-type(1){ left:9%;  top:12%; animation-delay:.0s}
+    .item:nth-of-type(2){ left:43%; top:8%; animation-delay:.2s}
+    .item:nth-of-type(3){ right:9%; top:16%; animation-delay:.4s}
+    .item:nth-of-type(4){ left:17%; top:56%; animation-delay:.6s}
+    .item:nth-of-type(5){ left:49%; top:44%; animation-delay:.8s}
+    .item:nth-of-type(6){ right:12%; top:58%; animation-delay:1s}
+
+    .shot{
+      position:absolute;
+      width:46px;
+      height:46px;
+      z-index:6;
+      pointer-events:none;
+      border:4px solid var(--yellow);
+      border-radius:50%;
+      transform:translate(-50%, -50%);
+      animation:shot .42s ease-out forwards;
+      box-shadow:0 0 0 3px #000 inset, 0 0 15px var(--yellow);
+    }
+
+    .shot::before,.shot::after{
+      content:"";
+      position:absolute;
+      background:#000;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+    }
+
+    .shot::before{width:66px;height:4px}
+    .shot::after{width:4px;height:66px}
+
+    .panel{
+      height:410px;
+      min-height:0;
+      border:5px solid #000;
+      border-radius:20px;
+      background:var(--panel);
+      box-shadow:8px 8px 0 #000;
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+
+    .score{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      border:3px solid #000;
+      background:linear-gradient(90deg, var(--pink), var(--blue));
+      padding:8px 10px;
+      border-radius:14px;
+      box-shadow:4px 4px 0 #000;
+      text-transform:uppercase;
+      margin-bottom:10px;
+      font-size:.95rem;
+    }
+
+    .score strong{
+      font-size:1.65rem;
+      color:var(--yellow);
+      text-shadow:2px 2px 0 #000;
+    }
+
+    .info{
+      flex:1;
+      background:rgba(0,0,0,.26);
+      border:3px solid rgba(255,255,255,.18);
+      border-radius:16px;
+      padding:12px;
+      font-family:Arial, sans-serif;
+      overflow:auto;
+    }
+
+    .info h2{
+      font-family:Impact, Haettenschweiler, "Arial Black", sans-serif;
+      margin:0 0 8px;
+      font-size:1.45rem;
+      text-transform:uppercase;
+      color:var(--yellow);
+      text-shadow:2px 2px 0 #000;
+    }
+
+    .info p{
+      font-size:.96rem;
+      line-height:1.4;
+      margin:0;
+    }
+
+    .hint{
+      display:none;
+    }
+
+    button.reset{
+      margin-top:10px;
+      border:3px solid #000;
+      border-radius:13px;
+      background:var(--green);
+      color:#111;
+      font:900 .9rem Arial, sans-serif;
+      padding:8px 12px;
+      box-shadow:4px 4px 0 #000;
+      cursor:pointer;
+      text-transform:uppercase;
+    }
+
+    button.reset:active{
+      transform:translate(3px,3px);
+      box-shadow:1px 1px 0 #000;
+    }
+
+    @keyframes float{
+      0%,100%{translate:0 0}
+      50%{translate:0 -7px}
+    }
+
+    @keyframes pop{
+      0%{transform:scale(1)}
+      50%{transform:scale(1.22) rotate(5deg)}
+      100%{transform:scale(1)}
+    }
+
+    @keyframes shot{
+      from{opacity:1; scale:.4}
+      to{opacity:0; scale:1.3}
+    }
+
+    @media (max-width:760px){
+      body{
+        overflow:auto;
+      }
+
+      .page{
+        height:auto;
+        min-height:500px;
+        grid-template-rows:auto auto;
+      }
+
+      header{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .arena-wrap{
+        grid-template-columns:1fr;
+      }
+
+      .arena,
+      .panel{
+        height:360px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>Schiet & Leer</h1>
+      <div class="tag">Raak alle 6 items!</div>
+    </header>
+
+    <section class="arena-wrap" aria-label="Interactieve leerpagina">
+      <div class="arena" id="arena">
+        <div class="hill"></div>
+
+        <button class="item" type="button" data-label="Veilig werken" data-title="Veilig werken"
+          data-text="Je gebruikt hardware, gereedschap en je werkplek veilig.">🛡️</button>
+
+        <button class="item" type="button" data-label="Techniek" data-title="Techniek"
+          data-text="Het device werkt goed en past bij de opdracht.">🧱</button>
+
+        <button class="item" type="button" data-label="Werkhouding" data-title="Werkhouding"
+          data-text="Je werkt serieus, houdt je aan afspraken en vraagt op tijd hulp.">➕</button>
+
+        <button class="item" type="button" data-label="Documenteren" data-title="Documenteren"
+          data-text="Je laat met bewijs zien wat je hebt gedaan.">🗺️</button>
+
+        <button class="item" type="button" data-label="Afspraken" data-title="Afspraken"
+          data-text="Je houdt je aan de planning, regels en afspraken die zijn gemaakt.">⚡</button>
+
+        <button class="item" type="button" data-label="Testen" data-title="Testen"
+          data-text="Je controleert hardware, software, netwerk en instellingen.">🏆</button>
+      </div>
+
+      <aside class="panel" aria-live="polite">
+        <div class="score">
+          <span>Raak:</span>
+          <strong><span id="hits">0</span>/6</strong>
+        </div>
+
+        <div class="info">
+          <h2 id="title">Kies een item</h2>
+          <p id="text">Klik of tik op een item in het speelveld. Alsof je erop schiet, verschijnt hier de uitleg bij dat item.</p>
+        </div>
+
+        <p class="hint"></p>
+        <button class="reset" id="reset" type="button">Reset ronde</button>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const arena = document.querySelector("#arena");
+    const items = [...document.querySelectorAll(".item")];
+    const title = document.querySelector("#title");
+    const text = document.querySelector("#text");
+    const hits = document.querySelector("#hits");
+    const reset = document.querySelector("#reset");
+
+    const hitItems = new Set();
+
+    function showShot(x, y){
+      const shot = document.createElement("span");
+      shot.className = "shot";
+      shot.style.left = x + "px";
+      shot.style.top = y + "px";
+      arena.appendChild(shot);
+      setTimeout(() => shot.remove(), 430);
+    }
+
+    items.forEach((item, index) => {
+      item.addEventListener("click", () => {
+        const arenaBox = arena.getBoundingClientRect();
+        const itemBox = item.getBoundingClientRect();
+        const x = itemBox.left - arenaBox.left + itemBox.width / 2;
+        const y = itemBox.top - arenaBox.top + itemBox.height / 2;
+
+        showShot(x, y);
+
+        item.classList.remove("hit");
+        void item.offsetWidth;
+        item.classList.add("hit");
+
+        title.textContent = item.dataset.title;
+        text.textContent = item.dataset.text;
+
+        hitItems.add(index);
+        hits.textContent = hitItems.size;
+      });
+    });
+
+    arena.addEventListener("click", event => {
+      if(event.target.classList.contains("item")) return;
+      const box = arena.getBoundingClientRect();
+      showShot(event.clientX - box.left, event.clientY - box.top);
+    });
+
+    reset.addEventListener("click", () => {
+      hitItems.clear();
+      hits.textContent = "0";
+      title.textContent = "Kies een item";
+      text.textContent = "Klik of tik op een item in het speelveld. Alsof je erop schiet, verschijnt hier de uitleg bij dat item.";
+      items.forEach(item => item.classList.remove("hit"));
+    });
+  </script>
+</body>
+</html>

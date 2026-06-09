@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio maken in Canvas</title>
+
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --primary: #2563eb;
+            --purple: #7c3aed;
+            --accent: #f97316;
+            --green: #22c55e;
+            --border: #e5e7eb;
+            --blue-light: #dbeafe;
+            --shadow: 0 12px 30px rgba(15, 23, 42, 0.10);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top left, #dbeafe 0, transparent 34%),
+                radial-gradient(circle at bottom right, #ede9fe 0, transparent 34%),
+                var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .page {
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 28px 18px 50px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            border-radius: 28px;
+            padding: 36px 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "🎒";
+            position: absolute;
+            right: 28px;
+            top: 18px;
+            font-size: 96px;
+            opacity: 0.18;
+            transform: rotate(8deg);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            color: white;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: clamp(30px, 5vw, 48px);
+            line-height: 1.1;
+        }
+
+        .hero p {
+            max-width: 720px;
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin: 22px 0;
+        }
+
+        .quick-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .quick-card .icon {
+            font-size: 30px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .quick-card strong {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .quick-card span {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .intro-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin: 22px 0;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .intro-card h2 {
+            margin-top: 0;
+            font-size: 26px;
+        }
+
+        .highlight {
+            background: #fff7ed;
+            border-left: 6px solid var(--accent);
+            border-radius: 14px;
+            padding: 18px;
+            margin-top: 18px;
+        }
+
+        .highlight strong {
+            color: #c2410c;
+        }
+
+        .accordion {
+            display: grid;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        details {
+            background: var(--card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        summary {
+            cursor: pointer;
+            padding: 20px 22px;
+            font-weight: 800;
+            font-size: 18px;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: #ffffff;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: "+";
+            background: var(--blue-light);
+            color: var(--primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        details[open] summary::after {
+            content: "−";
+            background: var(--primary);
+            color: white;
+        }
+
+        details[open] summary {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .details-content {
+            padding: 20px 22px 24px;
+        }
+
+        .details-content p:first-child {
+            margin-top: 0;
+        }
+
+        ul, ol {
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .steps {
+            counter-reset: step;
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .steps li {
+            counter-increment: step;
+            display: grid;
+            grid-template-columns: 40px 1fr;
+            gap: 12px;
+            align-items: start;
+            margin-bottom: 14px;
+        }
+
+        .steps li::before {
+            content: counter(step);
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            background: var(--primary);
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 11px 13px;
+            margin-bottom: 9px;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            color: var(--green);
+            font-weight: 900;
+            margin-right: 8px;
+        }
+
+        .mini-note {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 14px;
+            padding: 16px;
+            color: #1e3a8a;
+            margin-top: 14px;
+        }
+
+        .warning-note {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 14px;
+            padding: 16px;
+            color: #9a3412;
+            margin-top: 14px;
+        }
+
+        .example-box {
+            background: #f9fafb;
+            border: 1px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 16px;
+            margin-top: 14px;
+        }
+
+        .final-box {
+            margin-top: 24px;
+            background: linear-gradient(135deg, #111827, #374151);
+            color: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .final-box h2 {
+            margin-top: 0;
+        }
+
+        .final-box p {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 850px) {
+            .quick-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 520px) {
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 28px 22px;
+            }
+
+            summary {
+                font-size: 16px;
+                padding: 18px;
+            }
+
+            .details-content {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+
+        <section class="hero">
+            <span class="badge">Canvas-opdracht · Portfolio maken</span>
+            <h1>Maak jouw portfolio in Canvas</h1>
+            <p>
+                In je portfolio laat je zien waar je aan hebt gewerkt, wat je hebt geleerd
+                en waar je trots op bent. Je portfolio is jouw bewijsmap in Canvas.
+            </p>
+        </section>
+
+        <section class="quick-grid" aria-label="Korte samenvatting">
+            <div class="quick-card">
+                <span class="icon">📁</span>
+                <strong>Verzamel bewijs</strong>
+                <span>Voeg opdrachten, foto’s, bestanden of links toe.</span>
+            </div>
+
+            <div class="quick-card">
+                <span class="icon">🧠</span>
+                <strong>Laat zien wat je leert</strong>
+                <span>Schrijf kort wat je hebt gedaan en geleerd.</span>
+            </div>
+
+            <div class="quick-card">
+                <span class="icon">🎯</span>
+                <strong>Maak keuzes</strong>
+                <span>Kies werk dat goed laat zien wat jij kunt.</span>
+            </div>
+
+            <div class="quick-card">
+                <span class="icon">✅</span>
+                <strong>Houd het netjes</strong>
+                <span>Zorg dat je portfolio duidelijk en compleet is.</span>
+            </div>
+        </section>
+
+        <section class="intro-card">
+            <h2>Waar gaat deze opdracht over?</h2>
+
+            <p>
+                Je gaat een <strong>portfolio maken in Canvas</strong>. In dit portfolio verzamel je werk
+                waarmee je laat zien wat je hebt gedaan, geleerd en ontwikkeld.
+            </p>
+
+            <p>
+                Een portfolio is meer dan alleen opdrachten inleveren. Je legt ook kort uit
+                <strong>waarom je iets hebt toegevoegd</strong> en <strong>wat het over jou laat zien</strong>.
+            </p>
+
+            <div class="highlight">
+                <strong>Belangrijk:</strong>
+                je portfolio hoeft niet in één keer perfect te zijn. Je bouwt het stap voor stap op.
+                Tijdens de opleiding leer je steeds beter wat goede bewijzen zijn en hoe je jezelf presenteert.
+            </div>
+        </section>
+
+        <section class="accordion">
+
+            <details open>
+                <summary>🚀 Wat ga je maken?</summary>
+                <div class="details-content">
+                    <p>
+                        Je maakt in Canvas een portfolio waarin je jouw werk verzamelt.
+                        Denk aan opdrachten, foto’s, documenten, reflecties, feedback of andere bewijzen.
+                    </p>
+
+                    <p>
+                        Het doel is dat iemand anders kan zien wat jij hebt gedaan,
+                        wat je hebt geleerd en welke ontwikkeling je doormaakt.
+                    </p>
+                </div>
+            </details>
+
+            <details>
+                <summary>📌 Wat is een portfolio?</summary>
+                <div class="details-content">
+                    <p>
+                        Een portfolio is een verzameling van jouw werk. Het laat zien wie jij bent als student
+                        en hoe jij je ontwikkelt.
+                    </p>
+
+                    <p>
+                        Je gebruikt je portfolio om bewijs te verzamelen. Dat bewijs kan later helpen bij gesprekken,
+                        beoordelingen of het terugkijken op jouw leerproces.
+                    </p>
+
+                    <div class="example-box">
+                        <strong>Voorbeelden van bewijs:</strong>
+                        <ul>
+                            <li>Een uitgewerkte opdracht.</li>
+                            <li>Een foto van praktijkwerk.</li>
+                            <li>Een document dat je hebt gemaakt.</li>
+                            <li>Feedback van een docent of klasgenoot.</li>
+                            <li>Een korte reflectie over wat je hebt geleerd.</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+
+            <details>
+                <summary>🛠️ Zo maak je je portfolio in Canvas</summary>
+                <div class="details-content">
+                    <ol class="steps">
+                        <li>Open Canvas en ga naar de juiste cursus.</li>
+                        <li>Ga naar de plek waar je jouw portfolio moet maken of inleveren.</li>
+                        <li>Maak een duidelijke titel voor je portfolio.</li>
+                        <li>Voeg je eerste opdracht, bestand, foto of link toe.</li>
+                        <li>Schrijf kort wat je hebt toegevoegd.</li>
+                        <li>Leg uit waarom dit bewijs belangrijk is.</li>
+                        <li>Controleer of alles goed leesbaar en zichtbaar is.</li>
+                        <li>Werk je portfolio regelmatig bij.</li>
+                    </ol>
+
+                    <div class="mini-note">
+                        <strong>Tip:</strong> wacht niet tot het laatste moment. Een goed portfolio bouw je stap voor stap op.
+                    </div>
+                </div>
+            </details>
+
+            <details>
+                <summary>🧩 Wat zet je in je portfolio?</summary>
+                <div class="details-content">
+                    <p>
+                        In je portfolio zet je werk dat laat zien wat jij kunt en wat je hebt geleerd.
+                        Kies dus niet zomaar alles, maar denk na over wat belangrijk is.
+                    </p>
+
+                    <ul class="checklist">
+                        <li>Opdrachten die je hebt gemaakt.</li>
+                        <li>Bestanden of documenten die bij je opdracht horen.</li>
+                        <li>Foto’s van praktijkwerk of eindresultaten.</li>
+                        <li>Feedback die je hebt gekregen.</li>
+                        <li>Verbeteringen die je hebt aangebracht.</li>
+                        <li>Een korte uitleg of reflectie bij je bewijs.</li>
+                    </ul>
+                </div>
+            </details>
+
+            <details>
+                <summary>✍️ Wat schrijf je erbij?</summary>
+                <div class="details-content">
+                    <p>
+                        Bij elk bewijsstuk schrijf je kort een uitleg. Zo begrijpt iemand anders waarom je dit hebt toegevoegd.
+                    </p>
+
+                    <div class="example-box">
+                        <strong>Gebruik bijvoorbeeld deze vragen:</strong>
+                        <ul>
+                            <li>Wat heb ik gemaakt of gedaan?</li>
+                            <li>Waarom heb ik dit toegevoegd aan mijn portfolio?</li>
+                            <li>Wat laat dit bewijs over mij zien?</li>
+                            <li>Wat ging goed?</li>
+                            <li>Wat kan ik de volgende keer beter doen?</li>
+                            <li>Wat heb ik hiervan geleerd?</li>
+                        </ul>
+                    </div>
+
+                    <div class="mini-note">
+                        Je hoeft geen lang verhaal te schrijven. Een korte, duidelijke uitleg is vaak genoeg.
+                    </div>
+                </div>
+            </details>
+
+            <details>
+                <summary>🎨 Maak je portfolio overzichtelijk</summary>
+                <div class="details-content">
+                    <p>
+                        Een portfolio moet makkelijk te bekijken zijn. Zorg daarom voor een duidelijke indeling.
+                    </p>
+
+                    <ul class="checklist">
+                        <li>Gebruik duidelijke titels.</li>
+                        <li>Zet opdrachten in een logische volgorde.</li>
+                        <li>Geef bestanden een herkenbare naam.</li>
+                        <li>Controleer of links werken.</li>
+                        <li>Gebruik niet te veel verschillende kleuren of lettertypes.</li>
+                        <li>Zorg dat je tekst netjes en leesbaar is.</li>
+                    </ul>
+
+                    <div class="warning-note">
+                        <strong>Let op:</strong> iemand anders moet jouw portfolio kunnen begrijpen zonder dat jij erbij staat
+                        om alles uit te leggen.
+                    </div>
+                </div>
+            </details>
+
+            <details>
+                <summary>🔄 Je portfolio mag groeien</summary>
+                <div class="details-content">
+                    <p>
+                        Je portfolio hoeft niet meteen af te zijn. Het is juist de bedoeling dat je portfolio groeit.
+                    </p>
+
+                    <p>
+                        Tijdens de periode voeg je steeds nieuw werk toe. Je mag ook dingen verbeteren,
+                        vervangen of aanvullen als je later beter werk hebt gemaakt.
+                    </p>
+
+                    <p>
+                        Zo laat je niet alleen zien wat je hebt gemaakt, maar ook hoe jij je ontwikkelt.
+                    </p>
+                </div>
+            </details>
+
+            <details>
+                <summary>📤 Wat lever je in?</summary>
+                <div class="details-content">
+                    <p>
+                        Je levert jouw portfolio in via Canvas, volgens de afspraak van de docent.
+                    </p>
+
+                    <p>
+                        In jouw portfolio staan minimaal:
+                    </p>
+
+                    <ul class="checklist">
+                        <li>Een duidelijke titel.</li>
+                        <li>De gevraagde opdrachten of bewijsstukken.</li>
+                        <li>Een korte uitleg bij elk bewijsstuk.</li>
+                        <li>Bestanden, foto’s of links die goed openen.</li>
+                        <li>Een nette en overzichtelijke indeling.</li>
+                        <li>Een korte reflectie op wat je hebt geleerd.</li>
+                    </ul>
+                </div>
+            </details>
+
+            <details>
+                <summary>🗣️ Reflectievragen</summary>
+                <div class="details-content">
+                    <p>
+                        Beantwoord deze vragen in of onder je portfolio:
+                    </p>
+
+                    <ol>
+                        <li>Welk bewijsstuk laat het beste zien wat jij kunt?</li>
+                        <li>Waar ben je trots op?</li>
+                        <li>Wat vond je lastig tijdens het maken van je portfolio?</li>
+                        <li>Welke feedback heb je gekregen?</li>
+                        <li>Wat wil je de volgende keer verbeteren?</li>
+                    </ol>
+                </div>
+            </details>
+
+        </section>
+
+        <section class="final-box">
+            <h2>Onthoud dit goed</h2>
+            <p>
+                Een portfolio is jouw verhaal. Het laat zien wat je hebt gedaan, wat je leert
+                en hoe je groeit. Het hoeft niet perfect te zijn, maar het moet wel duidelijk,
+                netjes en van jou zijn.
+            </p>
+        </section>
+
+    </main>
+</body>
+</html>
+```
