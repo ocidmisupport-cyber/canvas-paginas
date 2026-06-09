@@ -29,6 +29,66 @@
       height: 500px;
       padding: 14px;
       overflow: hidden;
+      position: relative;
+    }
+
+    .confetti-laag {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 20;
+    }
+
+    .confetti {
+      position: absolute;
+      top: -24px;
+      width: 12px;
+      height: 18px;
+      border-radius: 3px;
+      opacity: 0.9;
+      animation: dwarrel 7s linear infinite;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+
+    .c1  { left: 4%;  background:#ff4d6d; animation-delay: 0s;   animation-duration: 6.8s; }
+    .c2  { left: 10%; background:#ffd166; animation-delay: 0.7s; animation-duration: 7.6s; width: 10px; height: 14px; }
+    .c3  { left: 16%; background:#06d6a0; animation-delay: 1.4s; animation-duration: 6.3s; }
+    .c4  { left: 23%; background:#118ab2; animation-delay: 0.9s; animation-duration: 7.1s; width: 8px; height: 16px; }
+    .c5  { left: 29%; background:#8338ec; animation-delay: 2.1s; animation-duration: 6.9s; }
+    .c6  { left: 36%; background:#ff9f1c; animation-delay: 0.3s; animation-duration: 7.8s; }
+    .c7  { left: 43%; background:#ef476f; animation-delay: 1.1s; animation-duration: 6.5s; width: 9px; height: 15px; }
+    .c8  { left: 50%; background:#06b6d4; animation-delay: 2.6s; animation-duration: 7.4s; }
+    .c9  { left: 58%; background:#8ac926; animation-delay: 1.8s; animation-duration: 6.2s; }
+    .c10 { left: 64%; background:#ffca3a; animation-delay: 0.5s; animation-duration: 7.2s; width: 11px; height: 11px; border-radius: 50%; }
+    .c11 { left: 70%; background:#ff595e; animation-delay: 2.3s; animation-duration: 6.7s; }
+    .c12 { left: 76%; background:#1982c4; animation-delay: 1.6s; animation-duration: 7.7s; width: 8px; height: 18px; }
+    .c13 { left: 82%; background:#6a4c93; animation-delay: 0.2s; animation-duration: 6.6s; }
+    .c14 { left: 88%; background:#00c2a8; animation-delay: 2.0s; animation-duration: 7.3s; width: 10px; height: 15px; }
+    .c15 { left: 93%; background:#f15bb5; animation-delay: 1.0s; animation-duration: 6.4s; }
+    .c16 { left: 97%; background:#fee440; animation-delay: 2.8s; animation-duration: 7.9s; width: 9px; height: 9px; border-radius: 50%; }
+
+    @keyframes dwarrel {
+      0% {
+        transform: translateY(-20px) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      8% {
+        opacity: 0.95;
+      }
+      25% {
+        transform: translateY(110px) translateX(18px) rotate(120deg);
+      }
+      50% {
+        transform: translateY(240px) translateX(-18px) rotate(240deg);
+      }
+      75% {
+        transform: translateY(365px) translateX(15px) rotate(320deg);
+      }
+      100% {
+        transform: translateY(560px) translateX(-12px) rotate(420deg);
+        opacity: 0.2;
+      }
     }
 
     .feestkop {
@@ -41,6 +101,8 @@
       border: 3px solid rgba(255,255,255,0.42);
       backdrop-filter: blur(3px);
       overflow: hidden;
+      position: relative;
+      z-index: 5;
     }
 
     .feestkop .emoji {
@@ -71,6 +133,8 @@
       gap: 16px;
       margin-top: 12px;
       height: 280px;
+      position: relative;
+      z-index: 5;
     }
 
     .tegel {
@@ -185,6 +249,8 @@
       line-height: 1.3;
       box-shadow: 0 10px 22px rgba(31,41,55,0.22);
       backdrop-filter: blur(3px);
+      position: relative;
+      z-index: 5;
     }
 
     .portfolio strong {
@@ -195,6 +261,25 @@
 
 <body>
   <main class="pagina">
+    <div class="confetti-laag" aria-hidden="true">
+      <span class="confetti c1"></span>
+      <span class="confetti c2"></span>
+      <span class="confetti c3"></span>
+      <span class="confetti c4"></span>
+      <span class="confetti c5"></span>
+      <span class="confetti c6"></span>
+      <span class="confetti c7"></span>
+      <span class="confetti c8"></span>
+      <span class="confetti c9"></span>
+      <span class="confetti c10"></span>
+      <span class="confetti c11"></span>
+      <span class="confetti c12"></span>
+      <span class="confetti c13"></span>
+      <span class="confetti c14"></span>
+      <span class="confetti c15"></span>
+      <span class="confetti c16"></span>
+    </div>
+
     <header class="feestkop">
       <div class="emoji">🎉 🖥️ 🚀</div>
       <h1>Hiep hoi!</h1>
