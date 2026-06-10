@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foto valt uit elkaar</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #111;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+#scene {
+    position: relative;
+    width: 900px;
+    max-width: 90vw;
+    aspect-ratio: 16 / 9;
+}
+
+.tile {
+    position: absolute;
+    background-image: url("BP02.png");
+    background-repeat: no-repeat;
+    transition:
+        transform 6s ease-in-out,
+        opacity 6s ease-in-out;
+}
+
+#buttonContainer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+}
+
+#buttonContainer.show {
+    opacity: 1;
+}
+
+.button {
+    padding: 18px 36px;
+    background: #ffffff;
+    color: #000;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 50px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.3);
+}
+</style>
+</head>
+<body>
+
+<div id="scene">
+    <div id="buttonContainer">
+        <a class="button" href="https://jouw-link.nl">
+            Klik hier
+        </a>
+    </div>
+</div>
+
+<script>
+const scene = document.getElementById("scene");
+
+const rows = 20;
+const cols = 20;
+
+const width = scene.offsetWidth;
+const height = scene.offsetHeight;
+
+const tileWidth = width / cols;
+const tileHeight = height / rows;
+
+for(let y = 0; y < rows; y++) {
+    for(let x = 0; x < cols; x++) {
+
+        const tile = document.createElement("div");
+        tile.className = "tile";
+
+        tile.style.width = tileWidth + "px";
+        tile.style.height = tileHeight + "px";
+
+        tile.style.left = (x * tileWidth) + "px";
+        tile.style.top = (y * tileHeight) + "px";
+
+        tile.style.backgroundSize = `${width}px ${height}px`;
+        tile.style.backgroundPosition =
+            `-${x * tileWidth}px -${y * tileHeight}px`;
+
+        scene.appendChild(tile);
+
+        setTimeout(() => {
+            const moveX = (Math.random() - 0.5) * 1200;
+            const moveY = (Math.random() - 0.5) * 1200;
+            const rotate = (Math.random() - 0.5) * 1080;
+
+            tile.style.transform =
+                `translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
+
+            tile.style.opacity = "0";
+        }, 2000);
+    }
+}
+
+setTimeout(() => {
+    document
+        .getElementById("buttonContainer")
+        .classList.add("show");
+}, 7500);
+</script>
+
+</body>
+</html>
