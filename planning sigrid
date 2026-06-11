@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Maak jouw planning in Excel</title>
+
+<style>
+.tab-wrapper {
+  max-width: 1000px;
+  height: 500px;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+.banner {
+  height: 140px;
+  box-sizing: border-box;
+  background: linear-gradient(135deg,#efa242,#12333a);
+  border-radius: 22px 22px 0 0;
+  color: white;
+  padding: 14px 26px 16px;
+}
+
+.banner h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  line-height: 1.1;
+  color: white;
+}
+
+.banner p {
+  margin: 0;
+  font-size: 14px;
+  max-width: 780px;
+  color: white;
+}
+
+.chips {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.chips span {
+  background: white;
+  color: #12333a;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.tab-page {
+  height: 360px;
+  display: flex;
+  border: 1px solid #dde7ec;
+  border-top: none;
+  border-radius: 0 0 22px 22px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.tab-menu {
+  width: 275px;
+  background: linear-gradient(180deg,#12333a,#0f252b);
+  padding: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.tab-button {
+  width: 100%;
+  display: block;
+  border: none;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  text-align: left;
+  padding: 6px 9px;
+  margin-bottom: 3px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.tab-button:hover,
+.tab-button.active {
+  background: #efa242;
+  color: #12333a;
+}
+
+.tab-content-area {
+  flex: 1;
+  padding: 22px;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.tab-content h2 {
+  color: #1e7e8f;
+  margin: 0 0 12px;
+  font-size: 24px;
+}
+
+.tab-content p {
+  font-size: 15px;
+  line-height: 1.55;
+  margin: 0 0 12px;
+  color: #24343a;
+}
+
+.tab-content ul,
+.tab-content ol {
+  margin: 8px 0 12px 22px;
+  padding: 0;
+}
+
+.tab-content li {
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 7px;
+  color: #24343a;
+}
+
+.note,
+.info {
+  background: #f7fafb;
+  border-left: 5px solid #efa242;
+  padding: 13px 15px;
+  border-radius: 10px;
+  color: #24343a;
+  margin: 14px 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.color-tags {
+  margin: 10px 0 14px 22px;
+}
+
+.color-tags span {
+  display: list-item;
+  list-style: disc;
+  background: none;
+  color: #24343a;
+  padding: 0;
+  margin-bottom: 7px;
+}
+
+@media (max-width: 700px) {
+  .tab-wrapper {
+    height: auto;
+  }
+
+  .tab-page {
+    height: auto;
+    flex-direction: column;
+  }
+
+  .tab-menu {
+    width: 100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="tab-wrapper">
+
+  <section class="banner">
+    <h1>Maak jouw planning in Excel</h1>
+    <p>Je maakt overzicht voor de komende 6 weken. Je plant wanneer je aan welke opdracht werkt, hoeveel tijd je denkt nodig te hebben en wanneer iets klaar moet zijn.</p>
+
+    <div class="chips">
+      <span>⏱️ 6 weken</span>
+      <span>📊 Excel</span>
+      <span>🧠 Leren plannen</span>
+      <span>✅ Bijstellen mag</span>
+    </div>
+  </section>
+
+  <div class="tab-page">
+    <div class="tab-menu">
+      <button class="tab-button active" onclick="openTab(event, 'over')">Waar gaat deze opdracht over?</button>
+      <button class="tab-button" onclick="openTab(event, 'doen')">Wat ga je doen?</button>
+      <button class="tab-button" onclick="openTab(event, 'rooster')">Houd rekening met je lesrooster</button>
+      <button class="tab-button" onclick="openTab(event, 'excel')">Zo maak je jouw planning in Excel</button>
+      <button class="tab-button" onclick="openTab(event, 'kolommen')">Deze kolommen gebruik je</button>
+      <button class="tab-button" onclick="openTab(event, 'kleuren')">Maak je planning duidelijk met kleuren</button>
+      <button class="tab-button" onclick="openTab(event, 'tips')">Tips voor een slimme planning</button>
+      <button class="tab-button" onclick="openTab(event, 'veranderen')">Je planning mag veranderen</button>
+      <button class="tab-button" onclick="openTab(event, 'inleveren')">Wat lever je in?</button>
+      <button class="tab-button" onclick="openTab(event, 'reflectie')">Reflectievragen</button>
+      <button class="tab-button" onclick="openTab(event, 'onthoud')">Onthoud dit goed</button>
+    </div>
+
+    <div class="tab-content-area">
+
+      <div id="over" class="tab-content active">
+        <h2>Waar gaat deze opdracht over?</h2>
+        <p>Je krijgt <strong>6 weken de tijd</strong> om verschillende opdrachten uit te voeren. De opdrachten vind je in het Excel-bestand op de volgende pagina.</p>
+        <p>In jouw planning laat je zien <strong>wanneer je aan welke opdracht gaat werken</strong>. Zo krijg je overzicht over je tijd, je opdrachten en je deadlines.</p>
+        <p class="note"><strong>Belangrijk:</strong> je planning hoeft nog niet perfect te zijn. Je weet vooraf waarschijnlijk nog niet precies hoe lang elke opdracht duurt. Dat is geen schande. We zitten tenslotte op school om te leren.</p>
+      </div>
+
+      <div id="doen" class="tab-content">
+        <h2>Wat ga je doen?</h2>
+        <p>Je maakt in Excel een planning voor de komende 6 weken. In die planning zet je de opdrachten die je moet maken. Daarna verdeel je deze opdrachten over de weken en momenten waarop jij kunt werken.</p>
+        <p>Het doel is dat jij overzicht krijgt. Je leert inschatten hoeveel tijd iets kost, prioriteiten stellen en je planning aanpassen als dat nodig is.</p>
+      </div>
+
+      <div id="rooster" class="tab-content">
+        <h2>Houd rekening met je lesrooster</h2>
+        <p>Niet iedereen heeft evenveel tijd om op school aan de opdrachten te werken. Kijk daarom goed naar jouw eigen rooster.</p>
+        <ul>
+          <li><strong>Veel lessen?</strong> Dan kun je meer werk tijdens de les plannen.</li>
+          <li><strong>Weinig lessen?</strong> Dan moet je goed kiezen wat je wanneer doet.</li>
+          <li><strong>Geen lessen?</strong> Dan moet je zelf tijd buiten de les inplannen.</li>
+        </ul>
+        <p>Jouw planning kan dus anders zijn dan die van een klasgenoot. Dat is logisch.</p>
+      </div>
+
+      <div id="excel" class="tab-content">
+        <h2>Zo maak je jouw planning in Excel</h2>
+        <ol>
+          <li>Open het Excel-bestand met de opdrachten of zie het overzicht op de volgende pagina.</li>
+          <li>Bekijk welke opdrachten je in de komende 6 weken moet uitvoeren.</li>
+          <li>Maak in Excel een overzichtelijke tabel.</li>
+          <li>Zet week 1 tot en met week 6 in je planning.</li>
+          <li>Verdeel de opdrachten over de weken.</li>
+          <li>Schrijf erbij wanneer je aan de opdracht gaat werken.</li>
+          <li>Schat hoeveel tijd je denkt nodig te hebben.</li>
+          <li>Controleer of je planning haalbaar is.</li>
+        </ol>
+      </div>
+
+      <div id="kolommen" class="tab-content">
+        <h2>Deze kolommen gebruik je</h2>
+        <p class="info"><strong>Let op:</strong> de kolommen die je in Excel gebruikt, worden tijdens de les uitgelegd. Zorg dat je goed meedoet, zodat je weet hoe je jouw planning moet invullen.</p>
+      </div>
+
+      <div id="kleuren" class="tab-content">
+        <h2>Maak je planning duidelijk met kleuren</h2>
+        <p>Gebruik kleuren in Excel om snel te zien hoe je ervoor staat. Je mag zelf kleuren kiezen, maar dit is een handig voorbeeld:</p>
+        <div class="color-tags">
+          <span>Groen = klaar</span>
+          <span>Oranje = mee bezig</span>
+          <span>Rood = loopt achter</span>
+          <span>Blauw = deadline</span>
+        </div>
+        <p>Zorg ervoor dat iemand anders jouw planning ook kan begrijpen.</p>
+      </div>
+
+      <div id="tips" class="tab-content">
+        <h2>Tips voor een slimme planning</h2>
+        <ul>
+          <li>Plan niet alles in de laatste week.</li>
+          <li>Verdeel het werk over de 6 weken.</li>
+          <li>Houd rekening met weken waarin je weinig of geen les hebt.</li>
+          <li>Plan grote of moeilijke opdrachten op tijd in.</li>
+          <li>Laat ruimte over voor opdrachten die langer duren dan verwacht.</li>
+          <li>Gebruik kleuren om overzicht te houden.</li>
+        </ul>
+      </div>
+
+      <div id="veranderen" class="tab-content">
+        <h2>Je planning mag veranderen</h2>
+        <p>Tijdens de 6 weken mag je jouw planning aanpassen. Dat hoort bij leren plannen.</p>
+        <p>Als een opdracht langer duurt dan je dacht, pas je je planning aan. Als je sneller klaar bent, kun je alvast verder met een volgende opdracht.</p>
+        <p>Een goede planning is niet een planning die nooit verandert. Een goede planning helpt jou om overzicht te houden en keuzes te maken.</p>
+      </div>
+
+      <div id="inleveren" class="tab-content">
+        <h2>Wat lever je in?</h2>
+        <p>Je levert een Excel-planning in voor de komende 6 weken. In jouw planning staan minimaal:</p>
+        <ul>
+          <li>Alle opdrachten uit het Excel-bestand.</li>
+          <li>Week 1 tot en met week 6.</li>
+          <li>Wanneer je aan welke opdracht werkt.</li>
+          <li>Of je dit tijdens de les of in eigen tijd doet.</li>
+          <li>Hoeveel tijd je denkt nodig te hebben.</li>
+          <li>De deadlines.</li>
+          <li>Een kolom waarin je aangeeft of iets klaar is.</li>
+        </ul>
+      </div>
+
+      <div id="reflectie" class="tab-content">
+        <h2>Reflectievragen</h2>
+        <p>Beantwoord onder je planning deze vragen:</p>
+        <ol>
+          <li>Hoeveel tijd heb jij volgens je rooster om aan de opdrachten te werken?</li>
+          <li>Welke weken worden voor jou druk?</li>
+          <li>Welke opdracht lijkt jou het meeste tijd te kosten?</li>
+          <li>Wat doe je als een opdracht langer duurt dan je had gedacht?</li>
+          <li>Wat heb je geleerd van het maken van deze planning?</li>
+        </ol>
+      </div>
+
+      <div id="onthoud" class="tab-content">
+        <h2>Onthoud dit goed</h2>
+        <p>Je hoeft nog geen perfecte planning te maken. Het belangrijkste is dat je begint, nadenkt over je tijd en leert om je planning bij te stellen.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function openTab(event, tabId) {
+  document.querySelectorAll(".tab-content").forEach(function(content) {
+    content.classList.remove("active");
+  });
+
+  document.querySelectorAll(".tab-button").forEach(function(button) {
+    button.classList.remove("active");
+  });
+
+  document.getElementById(tabId).classList.add("active");
+  event.currentTarget.classList.add("active");
+}
+</script>
+
+</body>
+</html>
