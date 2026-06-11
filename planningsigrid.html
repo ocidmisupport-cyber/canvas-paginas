@@ -16,7 +16,7 @@
 .banner {
   height: 140px;
   box-sizing: border-box;
-  background: linear-gradient(135deg,#12333a 0%,#12333a 28%,#efa242 100%);
+  background: linear-gradient(160deg,#12333a 0%,#12333a 30%,#efa242 100%);
   border-radius: 22px 22px 0 0;
   color: white;
   padding: 14px 26px 16px;
@@ -68,7 +68,7 @@
   box-sizing: border-box;
   overflow: hidden;
 }
-  
+
 .tab-button {
   width: 100%;
   display: block;
@@ -77,7 +77,7 @@
   color: white;
   text-align: left;
   padding: 5px 8px;
-margin-bottom: 2px;
+  margin-bottom: 2px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 12.8px;
@@ -90,13 +90,12 @@ margin-bottom: 2px;
   color: #12333a;
 }
 
-..tab-content-area {
+.tab-content-area {
   flex: 1;
   padding: 18px 20px;
   overflow: hidden;
   background: #ffffff;
 }
-
 
 .tab-content {
   display: none;
@@ -136,40 +135,12 @@ margin-bottom: 2px;
 .info {
   background: #f7fafb;
   border-left: 5px solid #efa242;
-  padding: 13px 15px;
+  padding: 10px 12px;
   border-radius: 10px;
   color: #24343a;
-  margin: 14px 0;
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.color-tags {
-  margin: 10px 0 14px 22px;
-}
-
-.color-tags span {
-  display: list-item;
-  list-style: disc;
-  background: none;
-  color: #24343a;
-  padding: 0;
-  margin-bottom: 7px;
-}
-
-@media (max-width: 700px) {
-  .tab-wrapper {
-    height: auto;
-  }
-
-  .tab-page {
-    height: auto;
-    flex-direction: column;
-  }
-
-  .tab-menu {
-    width: 1000px;
-  }
+  margin: 10px 0;
+  font-size: 14px;
+  line-height: 1.35;
 }
 </style>
 </head>
@@ -253,12 +224,12 @@ margin-bottom: 2px;
       <div id="kleuren" class="tab-content">
         <h2>Maak je planning duidelijk met kleuren</h2>
         <p>Gebruik kleuren in Excel om snel te zien hoe je ervoor staat. Je mag zelf kleuren kiezen, maar dit is een handig voorbeeld:</p>
-        <div class="color-tags">
-          <span>Groen = klaar</span>
-          <span>Oranje = mee bezig</span>
-          <span>Rood = loopt achter</span>
-          <span>Blauw = deadline</span>
-        </div>
+        <ul>
+          <li>Groen = klaar</li>
+          <li>Oranje = mee bezig</li>
+          <li>Rood = loopt achter</li>
+          <li>Blauw = deadline</li>
+        </ul>
         <p>Zorg ervoor dat iemand anders jouw planning ook kan begrijpen.</p>
       </div>
 
