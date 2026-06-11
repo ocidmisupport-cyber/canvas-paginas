@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Maak jouw portfolio</title>
+
+<style>
+.tab-wrapper {
+  width: 1000px;
+  height: 500px;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+.banner {
+  height: 140px;
+  box-sizing: border-box;
+  background: linear-gradient(160deg,#12333a 0%,#12333a 30%,#efa242 100%);
+  border-radius: 22px 22px 0 0;
+  color: white;
+  padding: 14px 26px 16px;
+}
+
+.banner h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  line-height: 1.1;
+  color: white;
+}
+
+.banner p {
+  margin: 0;
+  font-size: 14px;
+  max-width: 780px;
+  color: white;
+}
+
+.chips {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.chips span {
+  background: white;
+  color: #12333a;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.tab-page {
+  height: 360px;
+  display: flex;
+  border: 1px solid #dde7ec;
+  border-top: none;
+  border-radius: 0 0 22px 22px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.tab-menu {
+  width: 275px;
+  background: linear-gradient(180deg,#12333a 0%,#12333a 35%,#efa242 100%);
+  padding: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.tab-button {
+  width: 100%;
+  display: block;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  text-align: left;
+  padding: 5px 9px;
+  margin-bottom: 3px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 11.5px;
+  line-height: 1.15;
+}
+
+.tab-button:hover,
+.tab-button.active {
+  background: #efa242;
+  color: #12333a;
+}
+
+.tab-content-area {
+  flex: 1;
+  padding: 22px;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.tab-content h2 {
+  color: #1e7e8f;
+  margin: 0 0 12px;
+  font-size: 24px;
+}
+
+.tab-content p {
+  font-size: 15px;
+  line-height: 1.55;
+  margin: 0 0 12px;
+  color: #24343a;
+}
+
+.tab-content ul,
+.tab-content ol {
+  margin: 8px 0 12px 22px;
+  padding: 0;
+}
+
+.tab-content li {
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 7px;
+  color: #24343a;
+}
+
+.note,
+.info {
+  background: #f7fafb;
+  border-left: 5px solid #efa242;
+  padding: 13px 15px;
+  border-radius: 10px;
+  color: #24343a;
+  margin: 14px 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="tab-wrapper">
+
+  <section class="banner">
+    <h1>Maak jouw portfolio</h1>
+    <p>In je portfolio laat je zien waar je aan hebt gewerkt, wat je hebt geleerd en waar je trots op bent. Je portfolio is jouw bewijsmap. Je kiest zelf waar en hoe je het bewaart.</p>
+
+    <div class="chips">
+      <span>📁 Verzamel bewijs</span>
+      <span>🧠 Laat zien wat je leert</span>
+      <span>🎯 Maak keuzes</span>
+      <span>✅ Houd het netjes</span>
+    </div>
+  </section>
+
+  <div class="tab-page">
+    <div class="tab-menu">
+      <button class="tab-button active" onclick="openTab(event, 'over')">Waar gaat deze opdracht over?</button>
+      <button class="tab-button" onclick="openTab(event, 'maken')">Wat ga je maken?</button>
+      <button class="tab-button" onclick="openTab(event, 'portfolio')">Wat is een portfolio?</button>
+      <button class="tab-button" onclick="openTab(event, 'zo')">Zo maak je je portfolio</button>
+      <button class="tab-button" onclick="openTab(event, 'inhoud')">Wat zet je in je portfolio?</button>
+      <button class="tab-button" onclick="openTab(event, 'erbij')">Wat schrijf je erbij?</button>
+      <button class="tab-button" onclick="openTab(event, 'overzicht')">Maak je portfolio overzichtelijk</button>
+      <button class="tab-button" onclick="openTab(event, 'groeien')">Je portfolio mag groeien</button>
+      <button class="tab-button" onclick="openTab(event, 'bekeken')">Hoe wordt je portfolio bekeken?</button>
+      <button class="tab-button" onclick="openTab(event, 'minimaal')">Wat moet er minimaal in staan?</button>
+      <button class="tab-button" onclick="openTab(event, 'reflectie')">Reflectievragen</button>
+      <button class="tab-button" onclick="openTab(event, 'onthoud')">Onthoud dit goed</button>
+    </div>
+
+    <div class="tab-content-area">
+
+      <div id="over" class="tab-content active">
+        <h2>Waar gaat deze opdracht over?</h2>
+        <p>Je gaat een <strong>portfolio maken</strong>. In dit portfolio verzamel je werk waarmee je laat zien wat je hebt gedaan, geleerd en ontwikkeld.</p>
+        <p>Je maakt dit portfolio <strong>zelf</strong>. Dat mag bijvoorbeeld op je laptop, in OneDrive, in Word, als website, als HTML-pagina of in een andere vorm die bij jou past.</p>
+        <p class="note"><strong>Belangrijk:</strong> je portfolio hoeft niet in één keer perfect te zijn. Je bouwt het stap voor stap op. Tijdens de opleiding leer je steeds beter wat goede bewijzen zijn en hoe je jezelf presenteert.</p>
+      </div>
+
+      <div id="maken" class="tab-content">
+        <h2>Wat ga je maken?</h2>
+        <p>Je maakt een portfolio waarin je jouw werk verzamelt. Denk aan opdrachten, foto’s, documenten, reflecties, feedback of andere bewijzen.</p>
+        <p>Het doel is dat iemand anders kan zien wat jij hebt gedaan, wat je hebt geleerd en welke ontwikkeling je doormaakt.</p>
+      </div>
+
+      <div id="portfolio" class="tab-content">
+        <h2>Wat is een portfolio?</h2>
+        <p>Een portfolio is een verzameling van jouw werk. Het laat zien wie jij bent als student en hoe jij je ontwikkelt.</p>
+        <p>Je gebruikt je portfolio om bewijs te verzamelen. Dat bewijs kan later helpen bij gesprekken, beoordelingen of het terugkijken op jouw leerproces.</p>
+        <p><strong>Voorbeelden van bewijs:</strong></p>
+        <ul>
+          <li>Een uitgewerkte opdracht.</li>
+          <li>Een foto van praktijkwerk.</li>
+          <li>Een document dat je hebt gemaakt.</li>
+          <li>Feedback van een docent of klasgenoot.</li>
+          <li>Een korte reflectie over wat je hebt geleerd.</li>
+        </ul>
+      </div>
+
+      <div id="zo" class="tab-content">
+        <h2>Zo maak je je portfolio</h2>
+        <ol>
+          <li>Kies waar je jouw portfolio gaat maken of bewaren. Bijvoorbeeld op je laptop, in OneDrive, in Word, als HTML-pagina of op een andere plek.</li>
+          <li>Maak een duidelijke titel voor je portfolio.</li>
+          <li>Voeg je eerste opdracht, bestand, foto of link toe.</li>
+          <li>Schrijf kort wat je hebt toegevoegd.</li>
+          <li>Leg uit waarom dit bewijs belangrijk is.</li>
+          <li>Controleer of alles goed leesbaar en zichtbaar is.</li>
+          <li>Vraag feedback aan je docent of een klasgenoot als je dat wilt.</li>
+          <li>Werk je portfolio regelmatig bij.</li>
+        </ol>
+        <p class="info"><strong>Tip:</strong> wacht niet tot het laatste moment. Een goed portfolio bouw je stap voor stap op.</p>
+      </div>
+
+      <div id="inhoud" class="tab-content">
+        <h2>Wat zet je in je portfolio?</h2>
+        <p>In je portfolio zet je werk dat laat zien wat jij kunt en wat je hebt geleerd. Kies dus niet zomaar alles, maar denk na over wat belangrijk is.</p>
+        <ul>
+          <li>Opdrachten die je hebt gemaakt.</li>
+          <li>Bestanden of documenten die bij je opdracht horen.</li>
+          <li>Foto’s van praktijkwerk of eindresultaten.</li>
+          <li>Feedback die je hebt gekregen.</li>
+          <li>Verbeteringen die je hebt aangebracht.</li>
+          <li>Een korte uitleg of reflectie bij je bewijs.</li>
+        </ul>
+      </div>
+
+      <div id="erbij" class="tab-content">
+        <h2>Wat schrijf je erbij?</h2>
+        <p>Bij elk bewijsstuk schrijf je kort een uitleg. Zo begrijpt iemand anders waarom je dit hebt toegevoegd.</p>
+        <p><strong>Gebruik bijvoorbeeld deze vragen:</strong></p>
+        <ul>
+          <li>Wat heb ik gemaakt of gedaan?</li>
+          <li>Waarom heb ik dit toegevoegd aan mijn portfolio?</li>
+          <li>Wat laat dit bewijs over mij zien?</li>
+          <li>Wat ging goed?</li>
+          <li>Wat kan ik de volgende keer beter doen?</li>
+          <li>Wat heb ik hiervan geleerd?</li>
+        </ul>
+        <p class="info">Je hoeft geen lang verhaal te schrijven. Een korte, duidelijke uitleg is vaak genoeg.</p>
+      </div>
+
+      <div id="overzicht" class="tab-content">
+        <h2>Maak je portfolio overzichtelijk</h2>
+        <p>Een portfolio moet makkelijk te bekijken zijn. Zorg daarom voor een duidelijke indeling.</p>
+        <ul>
+          <li>Gebruik duidelijke titels.</li>
+          <li>Zet opdrachten in een logische volgorde.</li>
+          <li>Geef bestanden een herkenbare naam.</li>
+          <li>Controleer of links werken.</li>
+          <li>Gebruik niet te veel verschillende kleuren of lettertypes.</li>
+          <li>Zorg dat je tekst netjes en leesbaar is.</li>
+        </ul>
+        <p class="note"><strong>Let op:</strong> iemand anders moet jouw portfolio kunnen begrijpen zonder dat jij erbij staat om alles uit te leggen.</p>
+      </div>
+
+      <div id="groeien" class="tab-content">
+        <h2>Je portfolio mag groeien</h2>
+        <p>Je portfolio hoeft niet meteen af te zijn. Het is juist de bedoeling dat je portfolio groeit.</p>
+        <p>Tijdens de periode voeg je steeds nieuw werk toe. Je mag ook dingen verbeteren, vervangen of aanvullen als je later beter werk hebt gemaakt.</p>
+        <p>Zo laat je niet alleen zien wat je hebt gemaakt, maar ook hoe jij je ontwikkelt.</p>
+      </div>
+
+      <div id="bekeken" class="tab-content">
+        <h2>Hoe wordt je portfolio bekeken?</h2>
+        <p>Je bewaart je portfolio zelf. De docent controleert regelmatig hoe ver je bent en geeft waar nodig feedback.</p>
+        <p>Je hoeft je portfolio dus niet standaard in Canvas te maken. Wel kan de docent aangeven wanneer je iets moet laten zien of bespreken.</p>
+      </div>
+
+      <div id="minimaal" class="tab-content">
+        <h2>Wat moet er minimaal in staan?</h2>
+        <ul>
+          <li>Een duidelijke titel.</li>
+          <li>De gevraagde opdrachten of bewijsstukken.</li>
+          <li>Een korte uitleg bij elk bewijsstuk.</li>
+          <li>Bestanden, foto’s of links die goed openen.</li>
+          <li>Een nette en overzichtelijke indeling.</li>
+          <li>Een korte reflectie op wat je hebt geleerd.</li>
+        </ul>
+      </div>
+
+      <div id="reflectie" class="tab-content">
+        <h2>Reflectievragen</h2>
+        <p>Beantwoord deze vragen in of onder je portfolio:</p>
+        <ol>
+          <li>Welk bewijsstuk laat het beste zien wat jij kunt?</li>
+          <li>Waar ben je trots op?</li>
+          <li>Wat vond je lastig tijdens het maken van je portfolio?</li>
+          <li>Welke feedback heb je gekregen?</li>
+          <li>Wat wil je de volgende keer verbeteren?</li>
+        </ol>
+      </div>
+
+      <div id="onthoud" class="tab-content">
+        <h2>Onthoud dit goed</h2>
+        <p>Een portfolio is jouw verhaal. Het laat zien wat je hebt gedaan, wat je leert en hoe je groeit. Het hoeft niet perfect te zijn, maar het moet wel duidelijk, netjes en van jou zijn.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function openTab(event, tabId) {
+  document.querySelectorAll(".tab-content").forEach(function(content) {
+    content.classList.remove("active");
+  });
+
+  document.querySelectorAll(".tab-button").forEach(function(button) {
+    button.classList.remove("active");
+  });
+
+  document.getElementById(tabId).classList.add("active");
+  event.currentTarget.classList.add("active");
+}
+</script>
+
+</body>
+</html>
