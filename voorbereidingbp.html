@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Hiep hoi! We kunnen beginnen</title>
+
+<style>
+.tab-wrapper {
+  width: 1000px;
+  height: 500px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+.banner {
+  height: 140px;
+  box-sizing: border-box;
+  background: linear-gradient(160deg,#12333a 0%,#12333a 30%,#efa242 100%);
+  border-radius: 22px 22px 0 0;
+  color: white;
+  padding: 14px 26px 16px;
+}
+
+.banner h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  line-height: 1.1;
+  color: white;
+}
+
+.banner p {
+  margin: 0;
+  font-size: 14px;
+  max-width: 780px;
+  color: white;
+}
+
+.chips {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.chips span {
+  background: white;
+  color: #12333a;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.tab-page {
+  height: 360px;
+  display: flex;
+  border: 1px solid #dde7ec;
+  border-top: none;
+  border-radius: 0 0 22px 22px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.tab-menu {
+  width: 275px;
+  background: linear-gradient(180deg,#12333a 0%,#12333a 35%,#efa242 100%);
+  padding: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.tab-button {
+  width: 100%;
+  display: block;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  text-align: left;
+  padding: 5px 8px;
+  margin-bottom: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12.8px;
+  line-height: 1.15;
+}
+
+.tab-button:hover,
+.tab-button.active {
+  background: #efa242;
+  color: #12333a;
+}
+
+.tab-content-area {
+  flex: 1;
+  padding: 18px 20px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.tab-content h2 {
+  color: #1e7e8f;
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.tab-content p {
+  font-size: 14px;
+  line-height: 1.35;
+  margin: 0 0 8px;
+  color: #24343a;
+}
+
+.tab-content ul,
+.tab-content ol {
+  margin: 6px 0 8px 20px;
+  padding: 0;
+}
+
+.tab-content li {
+  font-size: 14px;
+  line-height: 1.35;
+  margin-bottom: 5px;
+  color: #24343a;
+}
+
+.note,
+.info {
+  background: #f7fafb;
+  border-left: 5px solid #efa242;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: #24343a;
+  margin: 10px 0;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.action-link {
+  display: inline-block;
+  background: #efa242;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.badge {
+  display: inline-block;
+  background: #dff4e7;
+  color: #0b5e2c;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="tab-wrapper">
+
+  <section class="banner">
+    <h1>Hiep hoi! We kunnen beginnen</h1>
+    <p>We kunnen eindelijk beginnen met de ICT-route van Sigrid Styling. Bekijk de video&apos;s, oefen je kennis en laat zien wat je kunt.</p>
+
+    <div class="chips">
+      <span>🎉 Start</span>
+      <span>💻 CompTIA A+</span>
+      <span>🚀 Oefenen</span>
+      <span>📁 Portfolio</span>
+    </div>
+  </section>
+
+  <div class="tab-page">
+    <div class="tab-menu">
+      <button class="tab-button active" onclick="openTab(event, 'start')">Waar gaat deze pagina over?</button>
+      <button class="tab-button" onclick="openTab(event, 'video')">Start met de CompTIA A+ video&apos;s</button>
+      <button class="tab-button" onclick="openTab(event, 'examen')">Durf jij het oefenexamen te maken?</button>
+      <button class="tab-button" onclick="openTab(event, 'werken')">Zo werk je met deze pagina</button>
+      <button class="tab-button" onclick="openTab(event, 'portfolio')">Portfolio-tip</button>
+      <button class="tab-button" onclick="openTab(event, 'onthoud')">Onthoud dit goed</button>
+    </div>
+
+    <div class="tab-content-area">
+
+      <div id="start" class="tab-content active">
+        <h2>Waar gaat deze pagina over?</h2>
+        <p>Gebruik deze pagina als startpunt voor de ICT-route van <strong>Sigrid Styling</strong>.</p>
+        <p>Je kunt vanaf hier aan de slag met de LinkedIn Learning-video&apos;s en je kunt je kennis testen met een oefenexamen.</p>
+        <p class="note"><strong>Doel:</strong> je leert nieuwe ICT-kennis, oefent met CompTIA A+ en verzamelt bewijs voor je portfolio.</p>
+      </div>
+
+      <div id="video" class="tab-content">
+        <h2>Start met de CompTIA A+ video&apos;s</h2>
+        <p><span class="badge">LinkedIn Learning</span></p>
+        <p>Bekijk de video&apos;s en gebruik wat je leert bij de opdrachten van Sigrid Styling.</p>
+        <p>Maak tijdens het kijken korte aantekeningen. Schrijf vooral op wat je later kunt gebruiken bij de praktijkopdrachten.</p>
+        <a class="action-link" href="https://www.linkedin.com/learning/comptia-a-plus-core-1-220-1201-cert-prep/what-is-a-cpu?u=84048860" target="_blank" rel="noopener">Bekijk de video&apos;s</a>
+      </div>
+
+      <div id="examen" class="tab-content">
+        <h2>Durf jij het oefenexamen te maken?</h2>
+        <p><span class="badge">Oefenexamen</span></p>
+        <p>Test je kennis met het oefenexamen. Zo ontdek je wat je al weet en waar je nog extra mee moet oefenen.</p>
+        <p>Als je dit oefenexamen maakt, staat dat goed op je portfolio.</p>
+        <a class="action-link" href="https://www.linkedin.com/learning/practice-exam-1-for-comptia-a-plus-core-1-220-1201-cert-prep/about-the-practice-exam?u=84048860" target="_blank" rel="noopener">Start oefenexamen</a>
+      </div>
+
+      <div id="werken" class="tab-content">
+        <h2>Zo werk je met deze pagina</h2>
+        <ol>
+          <li>Bekijk een stukje theorie of video.</li>
+          <li>Maak aantekeningen van wat je leert.</li>
+          <li>Gebruik je kennis bij de praktijkopdrachten.</li>
+          <li>Maak screenshots van je voortgang of resultaten.</li>
+          <li>Zet belangrijke bewijzen en reflecties in je portfolio.</li>
+        </ol>
+      </div>
+
+      <div id="portfolio" class="tab-content">
+        <h2>Portfolio-tip</h2>
+        <p>Maak screenshots van je voortgang, noteer wat je hebt geleerd en bewaar je resultaten.</p>
+        <p class="info"><strong>Tip:</strong> zet niet alleen het eindresultaat in je portfolio, maar ook bewijs van je leerproces.</p>
+        <ul>
+          <li>Screenshot van bekeken video&apos;s.</li>
+          <li>Screenshot van je oefenresultaat.</li>
+          <li>Korte reflectie: wat heb je geleerd?</li>
+          <li>Korte reflectie: wat wil je nog verbeteren?</li>
+        </ul>
+      </div>
+
+      <div id="onthoud" class="tab-content">
+        <h2>Onthoud dit goed</h2>
+        <p>Deze pagina is je startpunt. Begin rustig, werk stap voor stap en verzamel onderweg bewijs voor je portfolio.</p>
+        <p class="note"><strong>Belangrijk:</strong> oefenen hoort erbij. Je hoeft niet alles meteen te weten.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function openTab(event, tabId) {
+  document.querySelectorAll(".tab-content").forEach(function(content) {
+    content.classList.remove("active");
+  });
+
+  document.querySelectorAll(".tab-button").forEach(function(button) {
+    button.classList.remove("active");
+  });
+
+  document.getElementById(tabId).classList.add("active");
+  event.currentTarget.classList.add("active");
+}
+</script>
+
+</body>
+</html>
