@@ -2,59 +2,249 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Korte ICT-filmpjes</title>
 <style>
-  *{box-sizing:border-box}
-  body{margin:0;background:#111;font-family:Arial,Helvetica,sans-serif;display:grid;place-items:center;min-height:100vh}
-  .video-page{width:1000px;height:500px;overflow:hidden;background:linear-gradient(135deg,#12333a 0%,#12333a 48%,#efa242 100%);color:white;border-radius:22px;padding:20px;box-shadow:0 18px 45px rgba(0,0,0,.35)}
-  .top{height:82px;display:grid;grid-template-columns:1fr 330px;gap:18px;align-items:start}
-  h1{margin:0 0 7px;font-size:30px;line-height:1.05;color:#fff}
-  .intro{margin:0;font-size:14px;line-height:1.35;max-width:620px;color:rgba(255,255,255,.9)}
-  label{display:block;font-size:13px;margin:0 0 6px;color:rgba(255,255,255,.92)}
-  select{width:100%;padding:11px 12px;border-radius:13px;border:0;background:white;color:#12333a;font-size:15px;font-weight:bold;outline:none;cursor:pointer}
-  .main{height:378px;display:grid;grid-template-columns:300px 1fr;gap:18px}
-  .info,.video-box{background:rgba(255,255,255,.9);border-radius:18px;box-shadow:0 10px 25px rgba(0,0,0,.23)}
-  .info{color:#1f2933;padding:18px;position:relative;overflow:hidden}
-  .badge{display:inline-block;background:#12333a;color:#fff;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:bold;margin-bottom:12px}
-  .info h2{margin:0 0 11px;color:#d2652a;font-size:25px;line-height:1.12}
-  .info p{margin:0;font-size:15px;line-height:1.45}
-  .hint{position:absolute;left:18px;right:18px;bottom:18px;background:rgba(18,51,58,.08);border-left:5px solid #efa242;border-radius:10px;padding:10px;font-size:13px;line-height:1.35;color:#263238}
-  .video-box{padding:12px}
-  .video-wrap{width:100%;height:100%;border-radius:14px;overflow:hidden;background:#000;position:relative}
-  .video-wrap iframe{width:100%;height:100%;border:0;display:block;background:#000}
-  .fallback{display:grid;place-items:center;width:100%;height:100%;color:white;text-align:center;padding:30px;font-size:16px;line-height:1.4}
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+      radial-gradient(circle at 8% 14%, rgba(255, 255, 255, .22), transparent 16%),
+      radial-gradient(circle at 86% 22%, rgba(0, 214, 255, .28), transparent 18%),
+      radial-gradient(circle at 70% 92%, rgba(255, 77, 166, .26), transparent 22%),
+      linear-gradient(135deg, #16163f 0%, #112a60 45%, #071421 100%);
+  }
+
+  .page {
+    width: 1200px;
+    height: 500px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 30px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.04)),
+      linear-gradient(135deg, #20205a 0%, #005f85 48%, #071421 100%);
+    box-shadow: 0 26px 70px rgba(0,0,0,.42);
+  }
+
+  .page::before {
+    content: "";
+    position: absolute;
+    inset: -80px auto auto -80px;
+    width: 330px;
+    height: 330px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 212, 75, .38), rgba(255, 212, 75, 0) 68%);
+  }
+
+  .page::after {
+    content: "";
+    position: absolute;
+    right: -120px;
+    bottom: -160px;
+    width: 430px;
+    height: 430px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 77, 166, .26), rgba(255, 77, 166, 0) 70%);
+  }
+
+  .layout {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 18px;
+    padding: 18px;
+  }
+
+  .sidebar {
+    border-radius: 24px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: #ffffff;
+    background: rgba(6, 13, 34, .58);
+    border: 1px solid rgba(255,255,255,.18);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 18px 45px rgba(0,0,0,.24);
+    backdrop-filter: blur(14px);
+  }
+
+  .eyebrow {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 6px 11px;
+    border-radius: 999px;
+    color: #16163f;
+    background: linear-gradient(135deg, #a7f3ff, #ffe47a);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .2px;
+    margin-bottom: 11px;
+  }
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 31px;
+    line-height: 1.02;
+    color: #fff;
+    text-shadow: 0 8px 20px rgba(0,0,0,.22);
+  }
+
+  .intro {
+    margin: 0 0 14px;
+    font-size: 14px;
+    line-height: 1.38;
+    color: rgba(255,255,255,.88);
+  }
+
+  .counter {
+    display: inline-block;
+    align-self: flex-start;
+    margin-bottom: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ff4da6, #7c5cff);
+    font-size: 12px;
+    font-weight: 800;
+    box-shadow: 0 10px 22px rgba(124,92,255,.32);
+  }
+
+  label {
+    display: block;
+    margin-bottom: 7px;
+    color: rgba(255,255,255,.96);
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  select {
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 13px 14px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(255,255,255,.96);
+    color: #152045;
+    font-size: 15px;
+    font-weight: 800;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 12px 25px rgba(0,0,0,.18);
+  }
+
+  .info-card {
+    padding: 17px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.94);
+    color: #18223f;
+    border: 1px solid rgba(255,255,255,.45);
+    box-shadow: 0 18px 35px rgba(0,0,0,.18);
+  }
+
+  .info-card h2 {
+    margin: 0 0 10px;
+    color: #6b38ff;
+    font-size: 24px;
+    line-height: 1.08;
+  }
+
+  .info-card p {
+    margin: 0;
+    color: #31405f;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .spacer { flex: 1; }
+
+  .video-area {
+    display: grid;
+    grid-template-rows: 1fr;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .player-shell {
+    position: relative;
+    min-height: 0;
+    padding: 10px;
+    border-radius: 26px;
+    background:
+      linear-gradient(135deg, rgba(167,243,255,.28), rgba(255,77,166,.20)),
+      rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.18);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 18px 45px rgba(0,0,0,.25);
+  }
+
+  .player-shell::before {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border-radius: 18px;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.10);
+    z-index: 2;
+  }
+
+  .player-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 22px 42px rgba(0,0,0,.34);
+  }
+
+  .player-inner iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    background: #000;
+  }
 </style>
 </head>
 <body>
-<div class="video-page">
-  <div class="top">
-    <div>
+<div class="page">
+  <div class="layout">
+    <aside class="sidebar">
+      <span class="eyebrow">ICT video-overzicht</span>
       <h1>Korte ICT-filmpjes</h1>
-      <p class="intro">Kies een onderwerp uit het pulldownmenu. Rechts opent het filmpje direct vanuit Google Drive.</p>
-    </div>
-    <div>
+      <p class="intro">Kies hieronder een onderwerp. Rechts wordt de video afgespeeld.</p>
+
+      <span class="counter" id="counter">Filmpje 1</span>
+
       <label for="videoSelect">Kies een filmpje</label>
       <select id="videoSelect" onchange="toonVideo()"></select>
-    </div>
-  </div>
 
-  <div class="main">
-    <section class="info">
-      <span class="badge" id="counter">Filmpje 1</span>
-      <h2 id="videoTitel">Filmpje laden...</h2>
-      <p id="videoBeschrijving">Kies een filmpje uit het menu.</p>
-      
-    </section>
+      <div class="info-card">
+        <h2 id="videoTitel">Filmpje laden...</h2>
+        <p id="videoBeschrijving">Kies een filmpje uit het menu.</p>
+      </div>
 
-    <section class="video-box">
-      <div class="video-wrap" id="videoVak"></div>
+      <div class="spacer"></div>
+    </aside>
+
+    <section class="video-area">
+      <div class="player-shell">
+        <div class="player-inner" id="videoVak"></div>
+      </div>
     </section>
   </div>
 </div>
 
 <script>
 const videos = [
-  { titel: "AI", beschrijving: "Je kijkt nu naar: AI", link: "https://drive.google.com/file/d/1SouS4pbqh1bGvqWTsbrzQcOP5xQ9Xl3h/preview" },
+{ titel: "AI", beschrijving: "Je kijkt nu naar: AI", link: "https://drive.google.com/file/d/1SouS4pbqh1bGvqWTsbrzQcOP5xQ9Xl3h/preview" },
   { titel: "AMD", beschrijving: "Je kijkt nu naar: AMD", link: "https://drive.google.com/file/d/12f4B6ZzGbl9FK5vmYr_bwgDkYsACDaU4/preview" },
   { titel: "AMD graphic cards", beschrijving: "Je kijkt nu naar: AMD graphic cards", link: "https://drive.google.com/file/d/1od6camEBsoKc8eKnMVm83KJuAbILhviF/preview" },
   { titel: "Apple", beschrijving: "Je kijkt nu naar: Apple", link: "https://drive.google.com/file/d/1U7OruUYDbfK9tBlptrycRYHIGCSOfo-1/preview" },
@@ -131,7 +321,7 @@ const videoBeschrijving = document.getElementById("videoBeschrijving");
 const videoVak = document.getElementById("videoVak");
 const counter = document.getElementById("counter");
 
-function vulMenu(){
+function vulMenu() {
   videos.forEach((video,index)=>{
     const option = document.createElement("option");
     option.value = index;
@@ -140,7 +330,7 @@ function vulMenu(){
   });
 }
 
-function toonVideo(){
+function toonVideo() {
   const index = Number(select.value || 0);
   const video = videos[index];
   videoTitel.textContent = video.titel;
