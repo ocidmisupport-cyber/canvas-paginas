@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Korte ICT-filmpjes</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#111;font-family:Arial,Helvetica,sans-serif;display:grid;place-items:center;min-height:100vh}
+  .video-page{width:1000px;height:500px;overflow:hidden;background:linear-gradient(135deg,#12333a 0%,#12333a 48%,#efa242 100%);color:white;border-radius:22px;padding:20px;box-shadow:0 18px 45px rgba(0,0,0,.35)}
+  .top{height:82px;display:grid;grid-template-columns:1fr 330px;gap:18px;align-items:start}
+  h1{margin:0 0 7px;font-size:30px;line-height:1.05;color:#fff}
+  .intro{margin:0;font-size:14px;line-height:1.35;max-width:620px;color:rgba(255,255,255,.9)}
+  label{display:block;font-size:13px;margin:0 0 6px;color:rgba(255,255,255,.92)}
+  select{width:100%;padding:11px 12px;border-radius:13px;border:0;background:white;color:#12333a;font-size:15px;font-weight:bold;outline:none;cursor:pointer}
+  .main{height:378px;display:grid;grid-template-columns:300px 1fr;gap:18px}
+  .info,.video-box{background:rgba(255,255,255,.9);border-radius:18px;box-shadow:0 10px 25px rgba(0,0,0,.23)}
+  .info{color:#1f2933;padding:18px;position:relative;overflow:hidden}
+  .badge{display:inline-block;background:#12333a;color:#fff;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:bold;margin-bottom:12px}
+  .info h2{margin:0 0 11px;color:#d2652a;font-size:25px;line-height:1.12}
+  .info p{margin:0;font-size:15px;line-height:1.45}
+  .hint{position:absolute;left:18px;right:18px;bottom:18px;background:rgba(18,51,58,.08);border-left:5px solid #efa242;border-radius:10px;padding:10px;font-size:13px;line-height:1.35;color:#263238}
+  .video-box{padding:12px}
+  .video-wrap{width:100%;height:100%;border-radius:14px;overflow:hidden;background:#000;position:relative}
+  .video-wrap iframe{width:100%;height:100%;border:0;display:block;background:#000}
+  .fallback{display:grid;place-items:center;width:100%;height:100%;color:white;text-align:center;padding:30px;font-size:16px;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="video-page">
+  <div class="top">
+    <div>
+      <h1>Korte ICT-filmpjes</h1>
+      <p class="intro">Kies een onderwerp uit het pulldownmenu. Rechts opent het filmpje direct vanuit Google Drive.</p>
+    </div>
+    <div>
+      <label for="videoSelect">Kies een filmpje</label>
+      <select id="videoSelect" onchange="toonVideo()"></select>
+    </div>
+  </div>
+
+  <div class="main">
+    <section class="info">
+      <span class="badge" id="counter">Filmpje 1</span>
+      <h2 id="videoTitel">Filmpje laden...</h2>
+      <p id="videoBeschrijving">Kies een filmpje uit het menu.</p>
+      
+    </section>
+
+    <section class="video-box">
+      <div class="video-wrap" id="videoVak"></div>
+    </section>
+  </div>
+</div>
+
+<script>
+const videos = [
+  { titel: "AI", beschrijving: "Je kijkt nu naar: AI", link: "https://drive.google.com/file/d/1SouS4pbqh1bGvqWTsbrzQcOP5xQ9Xl3h/preview" },
+  { titel: "AMD", beschrijving: "Je kijkt nu naar: AMD", link: "https://drive.google.com/file/d/12f4B6ZzGbl9FK5vmYr_bwgDkYsACDaU4/preview" },
+  { titel: "AMD graphic cards", beschrijving: "Je kijkt nu naar: AMD graphic cards", link: "https://drive.google.com/file/d/1od6camEBsoKc8eKnMVm83KJuAbILhviF/preview" },
+  { titel: "Apple", beschrijving: "Je kijkt nu naar: Apple", link: "https://drive.google.com/file/d/1U7OruUYDbfK9tBlptrycRYHIGCSOfo-1/preview" },
+  { titel: "Apple phone", beschrijving: "Je kijkt nu naar: Apple phone", link: "https://drive.google.com/file/d/1a50GPgYGdxJqQ3iicV3qQ0HtwTu548lY/preview" },
+  { titel: "Battery", beschrijving: "Je kijkt nu naar: Battery", link: "https://drive.google.com/file/d/1LSV8CQV_sQncOlYuamFIy3L58itBSDBg/preview" },
+  { titel: "Bluetooth Generation", beschrijving: "Je kijkt nu naar: Bluetooth Generation", link: "https://drive.google.com/file/d/1EgxmmifqI7sUiiIOg7fLDNyR_67N1g04/preview" },
+  { titel: "components", beschrijving: "Je kijkt nu naar: components", link: "https://drive.google.com/file/d/1CGanDhVRdAk-f0jmGls0e5Bk5iqEhJis/preview" },
+  { titel: "Computer Chips 1", beschrijving: "Je kijkt nu naar: Computer Chips 1", link: "https://drive.google.com/file/d/1ywgGB_XiGn7op8SUet57dpgnuPiFGmKU/preview" },
+  { titel: "Computer Chips 2", beschrijving: "Je kijkt nu naar: Computer Chips 2", link: "https://drive.google.com/file/d/1oMcETse2JaQkYxSh3P4b1OdX3teNT2VW/preview" },
+  { titel: "Connectors 1", beschrijving: "Je kijkt nu naar: Connectors 1", link: "https://drive.google.com/file/d/1fSkmU0-sKudoA_JqDySZEE3hfiZzKKUU/preview" },
+  { titel: "CPU", beschrijving: "Je kijkt nu naar: CPU", link: "https://drive.google.com/file/d/1qdrITHfouJ8JSRknYCVThPwYgt1B5TJJ/preview" },
+  { titel: "CPU core count", beschrijving: "Je kijkt nu naar: CPU core count", link: "https://drive.google.com/file/d/18F7grRBvulMxEWkhf7kRZuWM208NRyW6/preview" },
+  { titel: "Cyber attack", beschrijving: "Je kijkt nu naar: Cyber attack", link: "https://drive.google.com/file/d/1_W51lyYudB_APvd6z96KUEeNwpR_8FW7/preview" },
+  { titel: "DDR memory", beschrijving: "Je kijkt nu naar: DDR memory", link: "https://drive.google.com/file/d/10jCDUZ0gCTym7u8pgZLla12ecgEKldvB/preview" },
+  { titel: "External SSD", beschrijving: "Je kijkt nu naar: External SSD", link: "https://drive.google.com/file/d/1AhyVqMWSaZ1S0oSWwtgGtqdfPL7EpLgx/preview" },
+  { titel: "File Compression", beschrijving: "Je kijkt nu naar: File Compression", link: "https://drive.google.com/file/d/1u36LYJXVCwoxpfsxcd2HyauSQYU1eijM/preview" },
+  { titel: "File format", beschrijving: "Je kijkt nu naar: File format", link: "https://drive.google.com/file/d/1FfYT6LaNtWsfgohhE6n-bAMog24OzxDN/preview" },
+  { titel: "Form factor", beschrijving: "Je kijkt nu naar: Form factor", link: "https://drive.google.com/file/d/1NaGcEFIsrbx1k1yo1b1A_M-SwuKNRiBp/preview" },
+  { titel: "Free apps 1", beschrijving: "Je kijkt nu naar: Free apps 1", link: "https://drive.google.com/file/d/1kgPdYREg7cUO6ch64mkg5YNHBqrhn19N/preview" },
+  { titel: "Free apps 2", beschrijving: "Je kijkt nu naar: Free apps 2", link: "https://drive.google.com/file/d/1YRg01Gs8LPltUCTgM-PXRGLqTN3EfOm-/preview" },
+  { titel: "Free apps 3", beschrijving: "Je kijkt nu naar: Free apps 3", link: "https://drive.google.com/file/d/1XB1HigZ2IinIh_PsZR5O35v5iVi7H_7y/preview" },
+  { titel: "GPU", beschrijving: "Je kijkt nu naar: GPU", link: "https://drive.google.com/file/d/1yzPmacKzwzcxY8TBCCJMyfm09pxtbyqt/preview" },
+  { titel: "GPU manufacturers", beschrijving: "Je kijkt nu naar: GPU manufacturers", link: "https://drive.google.com/file/d/1FI5PRzogbQsW9XJfWbJuxAMwsyYMf-OR/preview" },
+  { titel: "GPU type", beschrijving: "Je kijkt nu naar: GPU type", link: "https://drive.google.com/file/d/1g0Ca4mgCiM1u6EV9sa9y0v-3HCFrribW/preview" },
+  { titel: "GPU VRAM", beschrijving: "Je kijkt nu naar: GPU VRAM", link: "https://drive.google.com/file/d/1L304H21Romptqx1vD8FZ1pXSnJrHEEGT/preview" },
+  { titel: "history", beschrijving: "Je kijkt nu naar: history", link: "https://drive.google.com/file/d/16_Hu5Rpjo2v6gEGzt32Jvl92bFnKE9jC/preview" },
+  { titel: "Intel", beschrijving: "Je kijkt nu naar: Intel", link: "https://drive.google.com/file/d/1IIWcIhRjl_44Cn_xyLkfeFUFlMr93pjG/preview" },
+  { titel: "Internet connections", beschrijving: "Je kijkt nu naar: Internet connections", link: "https://drive.google.com/file/d/1JeemtC33ip3nLtIVQ0F0UoPWmAhbkynl/preview" },
+  { titel: "internet level", beschrijving: "Je kijkt nu naar: internet level", link: "https://drive.google.com/file/d/1OB60th5ewrbQaJmPHjfFmKPq2ZjGFd7f/preview" },
+  { titel: "Intl core", beschrijving: "Je kijkt nu naar: Intl core", link: "https://drive.google.com/file/d/14nPZAiGnAKLiVu48KfcfiQRpTzomMO-U/preview" },
+  { titel: "keyboard", beschrijving: "Je kijkt nu naar: keyboard", link: "https://drive.google.com/file/d/1b-vLjyej6ijwM21iVF3SSTxzioyKs3Ag/preview" },
+  { titel: "Laptops", beschrijving: "Je kijkt nu naar: Laptops", link: "https://drive.google.com/file/d/119-TQE2ug_dvlJJlVVtvzFhxq3JRmDVy/preview" },
+  { titel: "LCD Monitoren", beschrijving: "Je kijkt nu naar: LCD Monitoren", link: "https://drive.google.com/file/d/1TutPbijETDPQbYebzZqJURNEdsfxO96R/preview" },
+  { titel: "Major Computer Port", beschrijving: "Je kijkt nu naar: Major Computer Port", link: "https://drive.google.com/file/d/1XpuwtjBNYrB8cwo_58rAgb4UtHbUDPhs/preview" },
+  { titel: "Major Cyber Security Tool", beschrijving: "Je kijkt nu naar: Major Cyber Security Tool", link: "https://drive.google.com/file/d/1XrMBb8c-7VSDI9J_R9cLaOZXiwt_-3Hb/preview" },
+  { titel: "Mobile phones", beschrijving: "Je kijkt nu naar: Mobile phones", link: "https://drive.google.com/file/d/1yGDbONb0PuIBaOpEkSvafBf8qa7jejR0/preview" },
+  { titel: "Monitor", beschrijving: "Je kijkt nu naar: Monitor", link: "https://drive.google.com/file/d/1uE5UvtcPgubc3tAwifL5l-77dUS-lqQa/preview" },
+  { titel: "Motherboard features", beschrijving: "Je kijkt nu naar: Motherboard features", link: "https://drive.google.com/file/d/1VTWaZBGSFsgMpSTMrq-AOmCMWgTcXyxd/preview" },
+  { titel: "Network devices", beschrijving: "Je kijkt nu naar: Network devices", link: "https://drive.google.com/file/d/1F1hgLbcwFHmdASQf2adQ71F2W9Tw3hUE/preview" },
+  { titel: "Network types", beschrijving: "Je kijkt nu naar: Network types", link: "https://drive.google.com/file/d/1sBra-2Ea76TunBv4H-KSDDwbpmUA_eCA/preview" },
+  { titel: "Nvidea graphic cards", beschrijving: "Je kijkt nu naar: Nvidea graphic cards", link: "https://drive.google.com/file/d/1dbBRbWlQzUD8xgyXG1nMmkyG9vK9cLO1/preview" },
+  { titel: "Online scam", beschrijving: "Je kijkt nu naar: Online scam", link: "https://drive.google.com/file/d/1Xf23qM8_QN1h6wmjuK3obTTJj0cJK_0E/preview" },
+  { titel: "Online threats", beschrijving: "Je kijkt nu naar: Online threats", link: "https://drive.google.com/file/d/17xXH7B8gDXcDjpEj6MI4EjmvU3QFUiOt/preview" },
+  { titel: "Optical disc", beschrijving: "Je kijkt nu naar: Optical disc", link: "https://drive.google.com/file/d/16QydkNNijppxQthQzAxWd3p1VMFbaDnA/preview" },
+  { titel: "OS", beschrijving: "Je kijkt nu naar: OS", link: "https://drive.google.com/file/d/1DttJqews5q_ZmXRYM4RkpgLEmG_JoT0s/preview" },
+  { titel: "PC builing mistakes 1", beschrijving: "Je kijkt nu naar: PC builing mistakes 1", link: "https://drive.google.com/file/d/1XPa5Pe8R4oyKOIbstMNWLpja91WRNM6E/preview" },
+  { titel: "PC builing mistakes 2", beschrijving: "Je kijkt nu naar: PC builing mistakes 2", link: "https://drive.google.com/file/d/1tP2ZU8vExsk_wJzv0tLV4NxE-D2_shOc/preview" },
+  { titel: "Phones", beschrijving: "Je kijkt nu naar: Phones", link: "https://drive.google.com/file/d/1ZaQ0aQjii8S0K3Hl8GHN8UgEvaiLRBLt/preview" },
+  { titel: "PSU", beschrijving: "Je kijkt nu naar: PSU", link: "https://drive.google.com/file/d/1Epv2agCEw6b_ELIJBUB-c_egWesqpWZj/preview" },
+  { titel: "RAM", beschrijving: "Je kijkt nu naar: RAM", link: "https://drive.google.com/file/d/1MH23mHwE7XHhOakHbqW0IS_wkM-_Je9s/preview" },
+  { titel: "Smartphone Chip", beschrijving: "Je kijkt nu naar: Smartphone Chip", link: "https://drive.google.com/file/d/1ta4-4ihEaCotp4w2LJi96sSPcKHuw0Rw/preview" },
+  { titel: "SSD", beschrijving: "Je kijkt nu naar: SSD", link: "https://drive.google.com/file/d/1NUijhyggMUNmFaUjvhHHhhx9ILcyO62z/preview" },
+  { titel: "Storage 1", beschrijving: "Je kijkt nu naar: Storage 1", link: "https://drive.google.com/file/d/1TjDWHbyuuvl2KErLnZh1n_haDzGMU83R/preview" },
+  { titel: "Storage 2", beschrijving: "Je kijkt nu naar: Storage 2", link: "https://drive.google.com/file/d/1yjlmLr2aFwKF_SmNPOXX_oTGjuSY7xsm/preview" },
+  { titel: "Storage 3", beschrijving: "Je kijkt nu naar: Storage 3", link: "https://drive.google.com/file/d/1XmyU6cSb0TzIL7WlBJG1X1eXlw1Qx2lx/preview" },
+  { titel: "Storage 4", beschrijving: "Je kijkt nu naar: Storage 4", link: "https://drive.google.com/file/d/1cmo_b3qSPozIH-XDhdeC3rdChivv29li/preview" },
+  { titel: "Storage 5", beschrijving: "Je kijkt nu naar: Storage 5", link: "https://drive.google.com/file/d/1PHsusy8b2gQEnR7rF2Y63vW031ttUS-R/preview" },
+  { titel: "USB Colours", beschrijving: "Je kijkt nu naar: USB Colours", link: "https://drive.google.com/file/d/1If1mAFaufQDewEujZQ_E8T3KBvKNvlpz/preview" },
+  { titel: "USB types", beschrijving: "Je kijkt nu naar: USB types", link: "https://drive.google.com/file/d/1UbnKi-acUboIU2sIFAeOCjsZOyL6le9M/preview" },
+  { titel: "USB versions", beschrijving: "Je kijkt nu naar: USB versions", link: "https://drive.google.com/file/d/1hw-C7_JMFyeWyU1JMSkykbphh2v4RjgK/preview" },
+  { titel: "Video game engine", beschrijving: "Je kijkt nu naar: Video game engine", link: "https://drive.google.com/file/d/1N6rGNTIVTuWExEfRGO0CRoQN9dXHRNbF/preview" },
+  { titel: "Virus 1", beschrijving: "Je kijkt nu naar: Virus 1", link: "https://drive.google.com/file/d/1C7kP2QDupzLQgf8YWHeLjEr_cgdJUC6n/preview" },
+  { titel: "Virus 2", beschrijving: "Je kijkt nu naar: Virus 2", link: "https://drive.google.com/file/d/1xNImP6QWJ0OGQYCvguOwiACu9ospynKw/preview" },
+  { titel: "Web browsers", beschrijving: "Je kijkt nu naar: Web browsers", link: "https://drive.google.com/file/d/1VztT-tTp38sgjPd7YzDdIwJBCQaeMH23/preview" },
+  { titel: "WiFi", beschrijving: "Je kijkt nu naar: WiFi", link: "https://drive.google.com/file/d/1Qecb1vA4ZlGFXqa5vSZ-HJ3tUro40sjU/preview" },
+  { titel: "Windows versions", beschrijving: "Je kijkt nu naar: Windows versions", link: "https://drive.google.com/file/d/1-lV93Xic5IF7E40xCbY8j9XflT0OEGwt/preview" }
+];
+
+videos.sort((a,b)=>a.titel.localeCompare(b.titel,"nl",{numeric:true,sensitivity:"base"}));
+
+const select = document.getElementById("videoSelect");
+const videoTitel = document.getElementById("videoTitel");
+const videoBeschrijving = document.getElementById("videoBeschrijving");
+const videoVak = document.getElementById("videoVak");
+const counter = document.getElementById("counter");
+
+function vulMenu(){
+  videos.forEach((video,index)=>{
+    const option = document.createElement("option");
+    option.value = index;
+    option.textContent = video.titel;
+    select.appendChild(option);
+  });
+}
+
+function toonVideo(){
+  const index = Number(select.value || 0);
+  const video = videos[index];
+  videoTitel.textContent = video.titel;
+  videoBeschrijving.textContent = video.beschrijving;
+  counter.textContent = "Filmpje " + (index + 1) + " van " + videos.length;
+  videoVak.innerHTML = `<iframe src="${video.link}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+}
+
+vulMenu();
+toonVideo();
+</script>
+</body>
+</html>
