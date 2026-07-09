@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hardware Memory - 12 paren</title>
+<style>
+  * { box-sizing: border-box; }
+  :root {
+    --bg1: #10252c;
+    --bg2: #1b424d;
+    --bg3: #2b6c78;
+    --accent: #79e0c6;
+    --accent2: #9fe8ff;
+    --cardback1: #16323a;
+    --cardback2: #24515d;
+    --panel: rgba(255,255,255,0.12);
+    --panelBorder: rgba(255,255,255,0.22);
+    --white: #f5fbfd;
+    --muted: #d4eef1;
+    --good: #73f0a7;
+    --warn: #ffd36b;
+    --shadow: 0 14px 30px rgba(0,0,0,0.28);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle at top left, #315f6a 0%, var(--bg2) 30%, var(--bg1) 100%);
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--white);
+    padding: 10px;
+  }
+
+  .game-wrap {
+    width: 1200px;
+    height: 500px;
+    border-radius: 26px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 24px 50px rgba(0,0,0,0.35);
+    display: grid;
+    grid-template-rows: 76px 1fr;
+    backdrop-filter: blur(8px);
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #123139, #24515d 50%, #3f8d9a);
+    border-bottom: 1px solid rgba(255,255,255,0.14);
+  }
+
+  .title h1 {
+    margin: 0 0 4px;
+    font-size: 29px;
+    line-height: 1;
+  }
+
+  .title p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .stats {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+  }
+
+  .pill {
+    min-width: 96px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.16);
+    text-align: center;
+  }
+
+  .pill .label {
+    display: block;
+    font-size: 10px;
+    color: #cde8ee;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 3px;
+  }
+
+  .pill strong {
+    font-size: 20px;
+    color: white;
+  }
+
+  .btn {
+    border: none;
+    border-radius: 14px;
+    padding: 11px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #123039;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.18);
+  }
+
+  .main {
+    display: grid;
+    grid-template-columns: 840px 1fr;
+    gap: 14px;
+    padding: 14px;
+    min-height: 0;
+  }
+
+  .board-panel, .info-panel {
+    background: var(--panel);
+    border: 1px solid var(--panelBorder);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    min-height: 0;
+  }
+
+  .board-panel {
+    padding: 12px;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .board {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    align-content: stretch;
+  }
+
+  .card {
+    position: relative;
+    perspective: 1000px;
+    cursor: pointer;
+    min-height: 91px;
+  }
+
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.48s ease;
+    transform-style: preserve-3d;
+  }
+
+  .card.flipped .card-inner,
+  .card.matched .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .card-front {
+    background: linear-gradient(140deg, var(--cardback1), var(--cardback2));
+    color: rgba(255,255,255,0.9);
+    font-size: 30px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+
+  .card-front::after {
+    content: "?";
+    opacity: 0.95;
+  }
+
+  .card-back {
+    transform: rotateY(180deg);
+    background: linear-gradient(180deg, #f8ffff, #dff4f8);
+    color: #17333a;
+    padding: 8px;
+  }
+
+  .card.image .card-back {
+    background: linear-gradient(180deg, #f7fbfc, #dcebf0);
+  }
+
+  .card.text .card-back {
+    background: linear-gradient(180deg, #f8ffff, #d8edf5);
+  }
+
+  .card.matched .card-front,
+  .card.matched .card-back {
+    box-shadow: inset 0 0 0 3px rgba(115,240,167,0.9);
+  }
+
+  .text-face {
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.1;
+    padding: 8px;
+  }
+
+  .icon-face {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon-face svg {
+    width: 92%;
+    height: 92%;
+    filter: drop-shadow(0 4px 4px rgba(0,0,0,0.18));
+  }
+
+  .photo-face {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #eef7f9;
+  }
+
+  .photo-face img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    padding: 4px;
+  }
+
+  .photo-fallback {
+    position: absolute;
+    inset: auto 4px 4px 4px;
+    background: rgba(15, 45, 54, .55);
+    color: white;
+    font-size: 11px;
+    padding: 3px 5px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+
+  .info-panel {
+    padding: 16px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .info-panel h2 {
+    margin: 0 0 8px;
+    font-size: 23px;
+  }
+
+  .info-panel p {
+    margin: 0 0 8px;
+    line-height: 1.38;
+    color: #eefbfc;
+    font-size: 14px;
+  }
+
+  .hint-box, .match-box, .legend-box {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 12px;
+  }
+
+  .hint-box h3, .match-box h3, .legend-box h3 {
+    margin: 0 0 7px;
+    font-size: 16px;
+  }
+
+  .match-title {
+    color: var(--good);
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+
+  .legend {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    font-size: 13px;
+    color: #e4f6f8;
+  }
+
+  .legend span {
+    display: block;
+  }
+
+  .footer-mini {
+    color: #d8eef2;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(7,20,24,0.74);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+  }
+
+  .overlay.show { display: flex; }
+
+  .overlay-card {
+    width: 420px;
+    padding: 24px 22px;
+    border-radius: 24px;
+    background: linear-gradient(180deg, #18414a, #112b32);
+    border: 1px solid rgba(255,255,255,0.16);
+    text-align: center;
+    box-shadow: 0 18px 34px rgba(0,0,0,0.38);
+  }
+
+  .overlay-card h2 {
+    margin: 0 0 10px;
+    font-size: 30px;
+  }
+
+  .overlay-card p {
+    margin: 0 0 8px;
+    color: #ddf5f7;
+  }
+
+  .overlay-stats {
+    margin: 14px 0 16px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .overlay-stats div {
+    background: rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 10px 14px;
+    min-width: 110px;
+  }
+
+  .overlay-stats strong {
+    display: block;
+    font-size: 22px;
+    color: var(--accent);
+  }
+
+  .smallcaps { text-transform: uppercase; font-size: 11px; letter-spacing: 0.8px; color: #cbe3e7; }
+
+  .stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+</head>
+<body>
+  <div class="game-wrap">
+    <div class="topbar">
+      <div class="title">
+        <h1>Hardware Memory</h1>
+        <p>Draai kaartjes om en zoek de juiste combinatie van echte hardwarefoto en benaming. 12 paren = 24 kaartjes.</p>
+      </div>
+      <div class="stats">
+        <div class="pill"><span class="label">Tijd</span><strong id="time">00:00</strong></div>
+        <div class="pill"><span class="label">Zetten</span><strong id="moves">0</strong></div>
+        <div class="pill"><span class="label">Paren</span><strong id="pairs">0/12</strong></div>
+        <button class="btn" id="restartBtn">Opnieuw spelen</button>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="board-panel">
+        <div class="stage">
+          <div class="board" id="board"></div>
+          <div class="overlay" id="winOverlay">
+            <div class="overlay-card">
+              <h2>Goed gedaan!</h2>
+              <p>Je hebt alle hardwareparen gevonden.</p>
+              <div class="overlay-stats">
+                <div><span class="smallcaps">Tijd</span><strong id="finalTime">00:00</strong></div>
+                <div><span class="smallcaps">Zetten</span><strong id="finalMoves">0</strong></div>
+              </div>
+              <p>Netjes gewerkt. Je hebt afbeelding en benaming van 12 onderdelen aan elkaar gekoppeld.</p>
+              <button class="btn" id="playAgainBtn">Nog een keer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="info-panel">
+        <div>
+          <h2>Zo werkt het</h2>
+          <p>Klik op twee kaartjes. Een goed paar bestaat uit <strong>één afbeelding</strong> en <strong>één naam</strong> van hetzelfde onderdeel.</p>
+          <div class="hint-box">
+            <h3>Lesdoel</h3>
+            <p>Leer 12 veelgebruikte hardwareonderdelen herkennen met foto’s die veel dichter bij echte onderdelen liggen.</p>
+          </div>
+        </div>
+
+        <div class="match-box">
+          <h3>Laatst gevonden paar</h3>
+          <div id="matchContent">
+            <p>Nog geen paar gevonden. Begin maar met zoeken.</p>
+          </div>
+        </div>
+
+        <div class="legend-box">
+          <h3>Onderdelen in dit spel</h3>
+          <div class="legend">
+            <span>CPU · RAM · moederbord · SSD</span>
+            <span>HDD · voeding · videokaart · netwerkkaart</span>
+            <span>koeler · M.2 SSD · SATA-kabel · ethernetpoort</span>
+          </div>
+          <div class="footer-mini" style="margin-top:10px;">
+            Beelden: Wikimedia Commons/Wikipedia.
+          </div>
+          <div class="footer-mini" style="margin-top:6px;">
+            Tip: de foto’s laden via internet. In Canvas of op schoolwifi kan dat soms even duren. Let op vorm, poorten, chips, kabels en ventilatoren.
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+<script>
+const hardwareItems = [
+  {
+    id: 'cpu',
+    name: 'CPU',
+    image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Intel%20CPU%20Core%20i7%206700K%20Skylake%20top.jpg?width=420',
+    description: 'De processor is het rekenhart van de computer en voert instructies uit.',
+  },
+  {
+    id: 'ram',
+    name: 'RAM',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/16_GiB-DDR4-RAM-Riegel_RAM019FIX_Small_Crop_90_PCNT.png/420px-16_GiB-DDR4-RAM-Riegel_RAM019FIX_Small_Crop_90_PCNT.png',
+    description: 'Werkgeheugen waarin gegevens tijdelijk worden opgeslagen terwijl programma\'s draaien.',
+  },
+  {
+    id: 'moederbord',
+    name: 'Moederbord',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/MicroATX_Motherboard_with_AMD_Athlon_Processor_2_Digon3.jpg/420px-MicroATX_Motherboard_with_AMD_Athlon_Processor_2_Digon3.jpg',
+    description: 'De grote printplaat waarop alle belangrijke onderdelen en aansluitingen samenkomen.',
+  },
+  {
+    id: 'ssd',
+    name: 'SSD',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/2023_Dysk_SSD_Patriot_P210_2TB.jpg/420px-2023_Dysk_SSD_Patriot_P210_2TB.jpg',
+    description: 'Snelle opslag voor Windows, programma\'s en bestanden.',
+  },
+  {
+    id: 'hdd',
+    name: 'HDD',
+    image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Laptop-hard-drive-exposed.jpg?width=420',
+    description: 'Opslagschijf met draaiende onderdelen, meestal groter maar langzamer dan een SSD.',
+  },
+  {
+    id: 'voeding',
+    name: 'Voeding',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/PSU-Open1.jpg/420px-PSU-Open1.jpg',
+    description: 'Levert stroom aan alle onderdelen in de computer.',
+  },
+  {
+    id: 'videokaart',
+    name: 'Videokaart',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/AMD_RX_6900XT_.jpg/420px-AMD_RX_6900XT_.jpg',
+    description: 'Verwerkt beeld en zorgt voor de uitvoer naar monitoren.',
+  },
+  {
+    id: 'netwerkkaart',
+    name: 'Netwerkkaart',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/An_Intel_82574L_Gigabit_Ethernet_NIC%2C_PCI_Express_x1_card.jpg/420px-An_Intel_82574L_Gigabit_Ethernet_NIC%2C_PCI_Express_x1_card.jpg',
+    description: 'Zorgt ervoor dat een computer verbinding kan maken met een netwerk.',
+  },
+  {
+    id: 'koeler',
+    name: 'Koeler',
+    image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Computer_fan.jpg?width=420',
+    description: 'Voert warmte af zodat onderdelen, vooral de CPU, niet te heet worden.',
+  },
+  {
+    id: 'm2ssd',
+    name: 'M.2 SSD',
+    image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Sandisk_PC_SN7100s_NVMe_SSD_256GB_(M.2_2230).jpg?width=420',
+    description: 'Compacte SSD die rechtstreeks op het moederbord wordt geplaatst.',
+  },
+  {
+    id: 'sata',
+    name: 'SATA-kabel',
+    image: 'https://commons.wikimedia.org/wiki/Special:FilePath/SATA_Data_Cable.jpg?width=420',
+    description: 'Kabel die vaak wordt gebruikt om opslagapparaten met het moederbord te verbinden.',
+  },
+  {
+    id: 'ethernet',
+    name: 'Ethernetpoort',
+    image: 'https://commons.wikimedia.org/wiki/Special:FilePath/RJ45_Ethernet_port.jpg?width=420',
+    description: 'Netwerkaansluiting voor een UTP-kabel, ook wel RJ45-poort genoemd.',
+  }
+];
+
+const board = document.getElementById('board');
+const timeEl = document.getElementById('time');
+const movesEl = document.getElementById('moves');
+const pairsEl = document.getElementById('pairs');
+const matchContent = document.getElementById('matchContent');
+const restartBtn = document.getElementById('restartBtn');
+const playAgainBtn = document.getElementById('playAgainBtn');
+const winOverlay = document.getElementById('winOverlay');
+const finalTime = document.getElementById('finalTime');
+const finalMoves = document.getElementById('finalMoves');
+
+let cards = [];
+let flipped = [];
+let lockBoard = false;
+let moves = 0;
+let matchedPairs = 0;
+let timer = null;
+let seconds = 0;
+let gameStarted = false;
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function formatTime(totalSeconds) {
+  const min = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+  const sec = String(totalSeconds % 60).padStart(2, '0');
+  return `${min}:${sec}`;
+}
+
+function startTimer() {
+  if (timer) return;
+  timer = setInterval(() => {
+    seconds++;
+    timeEl.textContent = formatTime(seconds);
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timer);
+  timer = null;
+}
+
+
+function iconSVG(id) {
+  switch(id) {
+    case 'cpu':
+      return `<svg viewBox="0 0 160 110" aria-hidden="true">
+        <defs>
+          <linearGradient id="cpuBody" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#394950"/>
+            <stop offset="55%" stop-color="#202a30"/>
+            <stop offset="100%" stop-color="#11181d"/>
+          </linearGradient>
+          <linearGradient id="cpuTop" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#d4f8ec"/>
+            <stop offset="100%" stop-color="#7ee6c8"/>
+          </linearGradient>
+        </defs>
+        ${Array.from({length:8},(_,i)=>`<rect x="${22+i*14}" y="10" width="6" height="12" rx="2" fill="#b9a775"/><rect x="${22+i*14}" y="88" width="6" height="12" rx="2" fill="#b9a775"/>`).join('')}
+        ${Array.from({length:5},(_,i)=>`<rect x="10" y="${25+i*14}" width="12" height="6" rx="2" fill="#b9a775"/><rect x="138" y="${25+i*14}" width="12" height="6" rx="2" fill="#b9a775"/>`).join('')}
+        <rect x="24" y="18" width="112" height="74" rx="12" fill="url(#cpuBody)" stroke="#0b1215" stroke-width="3"/>
+        <rect x="42" y="30" width="76" height="50" rx="8" fill="url(#cpuTop)" stroke="#dffdf4" stroke-width="2"/>
+        <rect x="54" y="39" width="52" height="32" rx="5" fill="#f7fffb" opacity="0.9"/>
+        <circle cx="58" cy="44" r="2" fill="#b3d9c8"/>
+        <circle cx="102" cy="66" r="2" fill="#b3d9c8"/>
+      </svg>`;
+    case 'ram':
+      return `<svg viewBox="0 0 160 110" aria-hidden="true">
+        <defs>
+          <linearGradient id="ramBoard" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2a594b"/>
+            <stop offset="100%" stop-color="#17342c"/>
+          </linearGradient>
+        </defs>
+        <rect x="18" y="40" width="124" height="30" rx="6" fill="url(#ramBoard)" stroke="#0f231e" stroke-width="3"/>
+        ${[30,48,66,84,102].map(x=>`<rect x="${x}" y="46" width="12" height="18" rx="2" fill="#171d22" stroke="#84d7bd" stroke-width="1.5"/>`).join('')}
+        <rect x="120" y="46" width="14" height="18" rx="2" fill="#171d22" stroke="#84d7bd" stroke-width="1.5"/>
+        ${Array.from({length:11},(_,i)=>`<rect x="${26+i*9}" y="70" width="4" height="12" rx="1" fill="#d9c46e"/>`).join('')}
+        <rect x="71" y="70" width="14" height="6" rx="2" fill="#17342c"/>
+      </svg>`;
+    case 'moederbord':
+      return `<svg viewBox="0 0 160 110" aria-hidden="true">
+        <defs>
+          <linearGradient id="mb" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#315c4a"/>
+            <stop offset="100%" stop-color="#193327"/>
+          </linearGradient>
+        </defs>
+        <rect x="20" y="12" width="120" height="86" rx="8" fill="url(#mb)" stroke="#11241c" stroke-width="3"/>
+        <rect x="32" y="22" width="34" height="26" rx="4" fill="#c9f6e5" stroke="#0f211b" stroke-width="2"/>
+        <rect x="78" y="22" width="40" height="10" rx="2" fill="#182228" stroke="#8ddcc3" stroke-width="1.5"/>
+        <rect x="78" y="37" width="40" height="10" rx="2" fill="#182228" stroke="#8ddcc3" stroke-width="1.5"/>
+        <rect x="30" y="56" width="18" height="28" rx="3" fill="#182228" stroke="#86d6be" stroke-width="1.5"/>
+        <rect x="58" y="56" width="28" height="22" rx="3" fill="#d8fbef" stroke="#0f211b" stroke-width="1.5"/>
+        <rect x="96" y="56" width="26" height="18" rx="3" fill="#182228" stroke="#86d6be" stroke-width="1.5"/>
+        <path d="M66 35 H78 M48 48 V56 M86 27 V56 M86 70 H96" stroke="#7ecdb4" stroke-width="2" fill="none"/>
+        <circle cx="128" cy="86" r="4" fill="#d8fbef" stroke="#0f211b" stroke-width="1.5"/>
+      </svg>`;
+    case 'ssd':
+      return `<svg viewBox="0 0 160 110" aria-hidden="true">
+        <defs>
+          <linearGradient id="ssdCase" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#dbe5ea"/>
+            <stop offset="100%" stop-color="#8fabb8"/>
+          </linearGradient>
+        </defs>
+        <rect x="34" y="18" width="92" height="72" rx="12" fill="url(#ssdCase)" stroke="#46616d" stroke-width="3"/>
+        <rect x="48" y="32" width="44" height="32" rx="6" fill="#f8ffff" stroke="#7b98a3" stroke-width="2"/>
+        <text x="54" y="53" font-size="14" font-family="Arial" fill="#30505d" font-weight="bold">SSD</text>
+        <circle cx="107" cy="36" r="4" fill="#57707c"/>
+        <circle cx="107" cy="52" r="4" fill="#57707c"/>
+        <circle cx="107" cy="68" r="4" fill="#57707c"/>
+      </svg>`;
+    case 'hdd':
+      return `<svg viewBox="0 0 160 110" aria-hidden="true">
+        <defs>
+          <linearGradient id="hddCase" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#dbedf2"/>
+            <stop offset="100%" stop-color="#8fa4ae"/>
+          </linearGradient>
+        </defs>
+        <rect x="34" y="18" width="92" height="72" rx="10" fill="url(#hddCase)" stroke="#425a64" stroke-width="3"/>
+        <circle cx="76" cy="52" r="24" fill="#f7ffff" stroke="#495f68" stroke-width="2.5"/>
+        <circle cx="76" cy="52" r="6" fill="#758e97"/>
+        <path d="M76 52 L102 41" stroke="#607983" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="104" cy="40" r="4" fill="#607983"/>
+      </svg>`;
+    case 'voeding':
+      return `<svg viewBox="0 0 160 110" aria-hidden="true">
+        <defs>
+          <linearGradient id="psu" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#c0ccd2"/>
+            <stop offset="100%" stop-color="#6d7e87"/>
+          </linearGradient>
+        </defs>
+        <rect x="36" y="24" width="88" height="62" rx="8" fill="url(#psu)" stroke="#44565e" stroke-width="3"/>
+        <circle cx="68" cy="55" r="18" fill="#1f2a30" stroke="#7edac0" stroke-width="2"/>
+        <circle cx="68" cy="55" r="6" fill="#7edac0"/>
+        ${Array.from({length:6},(_,i)=>`<path d="M68 55 L${68 + 18*Math.cos((i*60)*Math.PI/180).toFixed(2)} ${55 + 18*Math.sin((i*60)*Math.PI/180).toFixed(2)}" stroke="#7edac0" stroke-width="2"/>`).join('')}
+        <rect x="98" y="42" width="16" height="26" rx="3" fill="#263238" stroke="#f2f8fa" stroke-width="1.5"/>
+      </svg>`;
+    case 'videokaart':
+      return `<svg viewBox="0 0 160 110" aria-hidden="true">
+        <rect x="18" y="42" width="124" height="26" rx="5" fill="#3a4f42" stroke="#0f241c" stroke-width="3"/>
+        <circle cx="58" cy="55" r="16" fill="#1e2830" stroke="#8de0c5" stroke-width="2"/>
+        <circle cx="100" cy="55" r="16" fill="#1e2830" stroke="#8de0c5" stroke-width="2"/>
+        <circle cx="58" cy="55" r="5" fill="#8de0c5"/>
+        <circle cx="100" cy="55" r="5" fill="#8de0c5"/>
+        <rect x="127" y="36" width="10" height="18" rx="2" fill="#d1dbdf" stroke="#5a7078" stroke-width="1.5"/>
+        <rect x="20" y="68" width="6" height="14" rx="1" fill="#d8c36b"/>
+      </svg>`;
+    case 'netwerkkaart':
+      return `<svg viewBox="0 0 160 110" aria-hidden="true">
+        <rect x="22" y="42" width="100" height="28" rx="5" fill="#2f584a" stroke="#10231c" stroke-width="3"/>
+        <rect x="104" y="44" width="24" height="24" rx="3" fill="#dbe9ef" stroke="#526b74" stroke-width="2"/>
+        <rect x="109" y="49" width="14" height="10" rx="1.5" fill="#ffffff" stroke="#526b74" stroke-width="1"/>
+        ${[46,56,66].map(x=>`<rect x="${x}" y="49" width="10" height="14" rx="2" fill="#1a252c" stroke="#8edfc4" stroke-width="1.5"/>`).join('')}
+        <rect x="20" y="70" width="6" height="12" rx="1" fill="#d8c36b"/>
+      </svg>`;
+    case 'koeler':
+      return `<svg viewBox="0 0 160 110" aria-hidden="true">
+        <rect x="42" y="20" width="76" height="70" rx="10" fill="#bcc8cd" stroke="#556871" stroke-width="3"/>
+        ${[50,58,66,74,82,90,98,106].map(x=>`<line x1="${x}" y1="24" x2="${x}" y2="64" stroke="#8fa0a7" stroke-width="3"/>`).join('')}
+        <circle cx="80" cy="64" r="22" fill="#243038" stroke="#8de0c5" stroke-width="2"/>
+        <circle cx="80" cy="64" r="5" fill="#8de0c5"/>
+        <path d="M80 64 L94 56 Q99 63 92 70 Z" fill="#d7fef0" stroke="#8de0c5" stroke-width="1.5"/>
+        <path d="M80 64 L66 56 Q61 63 68 70 Z" fill="#d7fef0" stroke="#8de0c5" stroke-width="1.5"/>
+        <path d="M80 64 L80 47 Q89 48 91 57 Z" fill="#d7fef0" stroke="#8de0c5" stroke-width="1.5"/>
+        <path d="M80 64 L80 81 Q71 80 69 71 Z" fill="#d7fef0" stroke="#8de0c5" stroke-width="1.5"/>
+      </svg>`;
+    case 'm2ssd':
+      return `<svg viewBox="0 0 160 110" aria-hidden="true">
+        <rect x="22" y="46" width="116" height="20" rx="7" fill="#2e584a" stroke="#0f211b" stroke-width="3"/>
+        <circle cx="33" cy="56" r="4" fill="#d5e8de" stroke="#173028" stroke-width="1.5"/>
+        <rect x="54" y="49" width="22" height="14" rx="3" fill="#19242a" stroke="#86d7be" stroke-width="1.5"/>
+        <rect x="82" y="49" width="22" height="14" rx="3" fill="#19242a" stroke="#86d7be" stroke-width="1.5"/>
+        <rect x="110" y="49" width="16" height="14" rx="3" fill="#19242a" stroke="#86d7be" stroke-width="1.5"/>
+        <rect x="138" y="49" width="8" height="14" fill="#d8c36b"/>
+      </svg>`;
+    case 'sata':
+      return `<svg viewBox="0 0 160 110" aria-hidden="true">
+        <path d="M26 72 C42 72, 46 30, 80 30 S118 74, 136 74" fill="none" stroke="#e6566d" stroke-width="8" stroke-linecap="round"/>
+        <path d="M26 72 C42 72, 46 30, 80 30 S118 74, 136 74" fill="none" stroke="#ff9baa" stroke-width="2" opacity="0.6" stroke-linecap="round"/>
+        <rect x="18" y="64" width="16" height="16" rx="3" fill="#d8dfe3" stroke="#6b7f88" stroke-width="2"/>
+        <rect x="130" y="66" width="16" height="16" rx="3" fill="#d8dfe3" stroke="#6b7f88" stroke-width="2"/>
+      </svg>`;
+    case 'ethernet':
+      return `<svg viewBox="0 0 160 110" aria-hidden="true">
+        <path d="M48 24 H112 V58 L96 76 H64 L48 58 Z" fill="#d8e7ec" stroke="#516971" stroke-width="3"/>
+        <rect x="62" y="34" width="36" height="14" rx="3" fill="#ffffff" stroke="#6a8088" stroke-width="1.5"/>
+        ${[66,74,82,90].map(x=>`<line x1="${x}" y1="48" x2="${x}" y2="62" stroke="#6a8088" stroke-width="2"/>`).join('')}
+        <rect x="70" y="62" width="20" height="7" rx="2" fill="#7fd9be"/>
+      </svg>`;
+    default:
+      return '';
+  }
+}
+function buildDeck() {
+  const deck = [];
+  hardwareItems.forEach(item => {
+    deck.push({ pairId: item.id, kind: 'image', name: item.name, description: item.description, image: item.image });
+    deck.push({ pairId: item.id, kind: 'text', name: item.name, description: item.description });
+  });
+  return shuffle(deck);
+}
+
+function createCard(cardData, index) {
+  const card = document.createElement('button');
+  card.className = `card ${cardData.kind}`;
+  card.type = 'button';
+  card.dataset.pairId = cardData.pairId;
+  card.dataset.kind = cardData.kind;
+  card.dataset.index = index;
+  card.setAttribute('aria-label', 'Memory kaart');
+
+  const backContent = cardData.kind === 'image'
+    ? `<div class="photo-face"><img src="${cardData.image}" alt="${cardData.name}" loading="lazy" referrerpolicy="no-referrer"><div class="photo-fallback">foto</div></div>`
+    : `<div class="text-face">${cardData.name}</div>`;
+
+  card.innerHTML = `
+    <div class="card-inner">
+      <div class="card-face card-front"></div>
+      <div class="card-face card-back">${backContent}</div>
+    </div>
+  `;
+
+  card.addEventListener('click', () => flipCard(card, cardData));
+  return card;
+}
+
+function renderBoard() {
+  board.innerHTML = '';
+  cards = buildDeck();
+  cards.forEach((cardData, index) => {
+    board.appendChild(createCard(cardData, index));
+  });
+}
+
+function updateStats() {
+  movesEl.textContent = moves;
+  pairsEl.textContent = `${matchedPairs}/12`;
+  timeEl.textContent = formatTime(seconds);
+}
+
+function resetMatchBox() {
+  matchContent.innerHTML = '<p>Nog geen paar gevonden. Begin maar met zoeken.</p>';
+}
+
+function showMatch(item) {
+  matchContent.innerHTML = `
+    <div class="match-title">${item.name}</div>
+    <p>${item.description}</p>
+  `;
+}
+
+function flipCard(card, cardData) {
+  if (lockBoard || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+  if (!gameStarted) {
+    gameStarted = true;
+    startTimer();
+  }
+
+  card.classList.add('flipped');
+  flipped.push({ element: card, data: cardData });
+
+  if (flipped.length === 2) {
+    moves++;
+    updateStats();
+    checkMatch();
+  }
+}
+
+function checkMatch() {
+  const [first, second] = flipped;
+  const isMatch = first.data.pairId === second.data.pairId && first.data.kind !== second.data.kind;
+
+  if (isMatch) {
+    first.element.classList.remove('flipped');
+    second.element.classList.remove('flipped');
+    first.element.classList.add('matched');
+    second.element.classList.add('matched');
+    matchedPairs++;
+    showMatch(hardwareItems.find(item => item.id === first.data.pairId));
+    flipped = [];
+    updateStats();
+
+    if (matchedPairs === 12) {
+      stopTimer();
+      finalTime.textContent = formatTime(seconds);
+      finalMoves.textContent = moves;
+      setTimeout(() => winOverlay.classList.add('show'), 420);
+    }
+  } else {
+    lockBoard = true;
+    setTimeout(() => {
+      first.element.classList.remove('flipped');
+      second.element.classList.remove('flipped');
+      flipped = [];
+      lockBoard = false;
+    }, 850);
+  }
+}
+
+function restartGame() {
+  stopTimer();
+  seconds = 0;
+  moves = 0;
+  matchedPairs = 0;
+  flipped = [];
+  lockBoard = false;
+  gameStarted = false;
+  winOverlay.classList.remove('show');
+  resetMatchBox();
+  updateStats();
+  renderBoard();
+}
+
+restartBtn.addEventListener('click', restartGame);
+playAgainBtn.addEventListener('click', restartGame);
+
+restartGame();
+</script>
+</body>
+</html>
